@@ -34,37 +34,37 @@ class AdminTest(LiveServerTestCase):
     # We need to fill the auth database for login test
     fixtures = ['users.json']
 
-    def test_login(self):
+    def setUp(self):
         # Create client
-        c = Client()
+        self.client = Client()
+
+    def test_login(self):
         # Get login page
-        response = c.get('/admin/', follow=True)
+        response = self.client.get('/admin/', follow=True)
         # Check response code Django does redirect on Admin so code 302, we need to set follow=True
         self.assertEquals(response.status_code, 200)
         # Check 'Log in' in admin webpage
         self.assertTrue('Log in' in response.content)
         # Log the user in
-        c.login(username='testuser', password="test")
+        self.client.login(username='testuser', password="test")
         # Check response code
-        response = c.get('/admin/')
+        response = self.client.get('/admin/')
         self.assertEquals(response.status_code, 200)
         # Check 'Log out' in response
         self.assertTrue('Log out' in response.content)
 
     def test_logout(self):
-        # Create client
-        c = Client()
         # Login
-        c.login(username='testuser', password='test')
+        self.client.login(username='testuser', password='test')
         # Check response code
-        response = c.get('/admin/')
+        response = self.client.get('/admin/')
         self.assertEquals(response.status_code, 200)
         # Check 'Log out' in response
         self.assertTrue('Log out' in response.content)
         # Log out
-        c.logout()
+        self.client.logout()
         # Check response code
-        response = c.get('/admin/', follow=True)
+        response = self.client.get('/admin/', follow=True)
         self.assertEquals(response.status_code, 200)
         # Check 'Log in' in response
-        self.assertTrue('Log in again' in response.content)
+        self.assertTrue('Log in' in response.content)
