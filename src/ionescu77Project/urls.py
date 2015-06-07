@@ -18,4 +18,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+
+    # Blogengine URLs
+    url(r'^.*$', include('blogengine.urls')),
 ]

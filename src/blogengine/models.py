@@ -7,3 +7,5 @@ class Post(models.Model):
     pub_date = models.DateTimeField()
     text = models.TextField()
 
+    def __unicode__(self):
+        return self.title
