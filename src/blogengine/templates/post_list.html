@@ -1,12 +1,9 @@
-<html>
-2    <head>
-3        <title>My Django Blog</title>
-4    </head>
-5    <body>
-6        {% for post in object_list %}
-7        <h1>{{ post.title }}</h1>
-8        <h3>{{ post.pub_date }}</h3>
-9        {{ post.text }}
-10        {% endfor %}
-11    </body>
-12</html>
+{% extends "includes/base.html" %}
+
+    {% block content %}
+        {% for post in object_list %}
+        <h1>{{ post.title }}</h1>
+        <h3>{{ post.pub_date }}</h3>
+        {{ post.text }}
+        {% endfor %}
+    {% endblock %}
