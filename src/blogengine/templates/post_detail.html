@@ -5,7 +5,7 @@
     {% block content %}
         <div class="post">
         <h1>{{ object.title }}</h1>
-        <h3>{{ object.pub_date }}</h3>
         {{ object.text|custom_markdown }}
+        <p><small>{{ object.pub_date }}</small></p>
         </div>
     {% endblock %}
