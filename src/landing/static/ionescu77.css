@@ -161,7 +161,7 @@ ul.social-buttons li a {
 ul.social-buttons li a:hover,
 ul.social-buttons li a:focus,
 ul.social-buttons li a:active {
-    background-color: #777;
+    background-color: orange;
 }
 
 .list-inline>li { /*Padding between social buttons */
