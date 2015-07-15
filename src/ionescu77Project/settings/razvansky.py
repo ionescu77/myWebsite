@@ -9,6 +9,7 @@ TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1']
 
 INSTALLED_APPS += (
+    'landing',
     'blogengine',
     'django.contrib.sites',
     'django.contrib.flatpages',

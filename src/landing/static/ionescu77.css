@@ -1,0 +1,171 @@
+/* General Landing Page style */
+
+body {
+    text-align: center;
+    color: #fff;
+    background: url('/static/img/Panorama.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+p {
+    font-size: 14px;
+    line-height: 1.75;
+}
+
+p.large {
+    font-size: 16px;
+}
+
+a,
+a:hover,
+a:focus,
+a:active,
+a.active {
+    outline: 0;
+}
+
+a {
+    color: orange;
+}
+
+a:hover,
+a:focus,
+a:active,
+a.active {
+    color: orange;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    text-transform: uppercase;
+    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 700;
+}
+
+.page-header {
+  text-transform: initial;
+  font-family: "courier new"
+}
+
+body .intro-text {
+    padding-top: 100px;
+    padding-bottom: 50px;
+}
+
+body .intro-text .intro-lead-in {
+    margin-bottom: 25px;
+    font-family: "Droid Serif","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 22px;
+    font-style: italic;
+    line-height: 22px;
+}
+
+body .intro-text .intro-heading {
+    margin-bottom: 25px;
+    text-transform: uppercase;
+/*    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif; */
+    font-size: 50px;
+    font-weight: 700;
+    line-height: 50px;
+}
+
+
+.btn-xl {
+    border-color: #f6bf01;
+    padding: 30px 70px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    background-color: transparent;
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
+.btn-xl:hover,
+.btn-xl:focus,
+.btn-xl:active,
+.btn-xl.active,
+.open .dropdown-toggle.btn-xl {
+    border-color: #fff;
+    color: #fff;
+    background-color: transparent;
+}
+
+.btn-xl:active,
+.btn-xl.active,
+.open .dropdown-toggle.btn-xl {
+    background-image: none;
+}
+
+.btn-xl.disabled,
+.btn-xl[disabled],
+fieldset[disabled] .btn-xl,
+.btn-xl.disabled:hover,
+.btn-xl[disabled]:hover,
+fieldset[disabled] .btn-xl:hover,
+.btn-xl.disabled:focus,
+.btn-xl[disabled]:focus,
+fieldset[disabled] .btn-xl:focus,
+.btn-xl.disabled:active,
+.btn-xl[disabled]:active,
+fieldset[disabled] .btn-xl:active,
+.btn-xl.disabled.active,
+.btn-xl[disabled].active,
+fieldset[disabled] .btn-xl.active {
+    border-color: orange;
+    background-color: orange;
+}
+
+.btn-xl .badge {
+    color: orange;
+    background-color: #fff;
+}
+
+
+/* SOCIAL Buttons Style */
+
+ul.social-buttons {
+    margin-bottom: 0;
+}
+
+ul.social-buttons li a {
+  border-color: #f6bf01;
+  color: #fff;
+  box-shadow: 0 0 3px 3px #fff;  /* for hollow circle with 3px border*/
+
+    display: block;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    font-size: 20px;
+    line-height: 200px;
+    outline: 0;
+    color: #fff;
+    background-color: transparent;
+  /*  background-color: #222;*/
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    transition: all .3s;
+}
+
+ul.social-buttons li a:hover,
+ul.social-buttons li a:focus,
+ul.social-buttons li a:active {
+    background-color: #777;
+}
+
+.list-inline>li { /*Padding between social buttons */
+  display: inline-block;
+  padding-right: 15px;
+  padding-left: 15px;
+}
