@@ -20,7 +20,7 @@ from django.views.generic.base import RedirectView
 admin.autodiscover()
 
 urlpatterns = [
-    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/favicon.ico')),
+    url(r'^favicon\.ico$', RedirectView.as_view(url='/favicon.ico')),
     url(r'^administrare/', include(admin.site.urls)),
     # Blogengine URLs
     url(r'^blog/', include('blogengine.urls')),
