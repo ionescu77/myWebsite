@@ -45,7 +45,7 @@ class AdminTest(LiveServerTestCase):
 
     def test_login(self):
         # Get login page
-        response = self.client.get('/admin/', follow=True)
+        response = self.client.get('/administrare/', follow=True)
         # Check response code Django does redirect on Admin so code 302, we need to set follow=True
         self.assertEquals(response.status_code, 200)
         # Check 'Log in' in admin webpage
@@ -53,7 +53,7 @@ class AdminTest(LiveServerTestCase):
         # Log the user in
         self.client.login(username='testuser', password="test")
         # Check response code
-        response = self.client.get('/admin/')
+        response = self.client.get('/administrare/')
         self.assertEquals(response.status_code, 200)
         # Check 'Log out' in response
         self.assertTrue('Log out' in response.content)
@@ -62,30 +62,30 @@ class AdminTest(LiveServerTestCase):
         # Login
         self.client.login(username='testuser', password='test')
         # Check response code
-        response = self.client.get('/admin/')
+        response = self.client.get('/administrare/')
         self.assertEquals(response.status_code, 200)
         # Check 'Log out' in response
         self.assertTrue('Log out' in response.content)
         # Log out
         self.client.logout()
         # Check response code
-        response = self.client.get('/admin/', follow=True)
+        response = self.client.get('/administrare/', follow=True)
         self.assertEquals(response.status_code, 200)
         # Check 'Log in' in response
         self.assertTrue('Log in' in response.content)
 
-    # The admin interface implements URLs for creating new instances of a model in a consistent format of /admin/app_name/model_name/add/
+    # The admin interface implements URLs for creating new instances of a model in a consistent format of /administrare/app_name/model_name/add/
     def test_create_admin_post(self):
         # Log in
         self.client.login(username='testuser', password='test')
         # Check 'Log in' in admin webpage
-        response = self.client.get('/admin/')
+        response = self.client.get('/administrare/')
         self.assertTrue('Log out' in response.content)
         # Check response code
-        response = self.client.get('/admin/blogengine/post/add/', follow=True)
+        response = self.client.get('/administrare/blogengine/post/add/', follow=True)
         self.assertEquals(response.status_code, 200)
         # Create the new post
-        response = self.client.post('/admin/blogengine/post/add/', {
+        response = self.client.post('/administrare/blogengine/post/add/', {
             'title': 'My first post',
             'text': 'This is my first post',
             'pub_date_0': '2013-12-28',
@@ -114,7 +114,7 @@ class AdminTest(LiveServerTestCase):
         blogpost.pub_date = timezone.now()
         blogpost.save()
         # Edit the post
-        response = self.client.post('/admin/blogengine/post/' + str(blogpost.pk) + '/', {
+        response = self.client.post('/administrare/blogengine/post/' + str(blogpost.pk) + '/', {
             'title': 'My EDITED post',
             'text': 'This is my EDITED editable blog post',
             'pub_date_0': '2015-05-28',
@@ -147,7 +147,7 @@ class AdminTest(LiveServerTestCase):
         # Log in
         self.client.login(username='testuser', password='test')
         # Delete the post
-        response = self.client.post('/admin/blogengine/post/' + str(post.pk) + '/delete/', {
+        response = self.client.post('/administrare/blogengine/post/' + str(post.pk) + '/delete/', {
             'post': 'yes'
         }, follow=True)
         self.assertEquals(response.status_code, 200)
@@ -174,9 +174,10 @@ class PostViewTest(LiveServerTestCase):
         all_posts = Post.objects.all()
         self.assertEquals(len(all_posts), 1)
         # Fetch the index
-        response = self.client.get('/')
+        response = self.client.get('/blog/')
         self.assertEquals(response.status_code, 200)
         # Check post title is in response
+        #print "%s" %response
         self.assertTrue(post.title in response.content)
         # Check post text is in response, will fail with markdown
         #self.assertTrue(post.text in response.content)
@@ -205,10 +206,12 @@ class PostViewTest(LiveServerTestCase):
 
         # Get the post URL
         post_url = only_post.get_absolute_url()
+        #print "%s" %post_url
 
         # Fetch the post
-        response = self.client.get(post_url)
+        response = self.client.get("%s" %post_url)
         self.assertEquals(response.status_code, 200)
+        #print "%s" %response
 
         # Check the post title is in the response
         self.assertTrue(post.title in response.content)
