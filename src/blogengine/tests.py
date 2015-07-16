@@ -238,3 +238,38 @@ class PostViewTest(BaseAcceptanceTest):
 
 
 # TEST for FLATPAGES Section
+class FlatPageViewTest(BaseAcceptanceTest):
+    def test_create_flatpage(self):
+        # Create FlatPage
+        page = FlatPage()
+        page.url = '/about/'
+        page.title = 'About Me'
+        page.content = 'All about me. Well almost ...'
+        page.save()
+
+        # Add the site
+        page.sites.add(Site.objects.all()[0])
+        page.save()
+
+        # Check new page saved
+        all_pages = FlatPage.objects.all()
+        self.assertEquals(len(all_pages), 1)
+        only_page = all_pages[0]
+        self.assertEquals(only_page, page)
+
+        # Check data correct
+        self.assertEquals(only_page.url, '/about/')
+        self.assertEquals(only_page.title, 'About Me')
+        self.assertEquals(only_page.content, 'All about me. Well almost ...')
+
+        # Get URL
+        page_url = only_page.get_absolute_url()
+
+        # Get the page
+        response = self.client.get(page_url)
+        self.assertEquals(response.status_code, 200)
+
+        # Get title and content in the response
+        self.assertTrue('About Me' in response.content)
+        self.assertTrue('All about me. Well almost ...' in response.content)
+        

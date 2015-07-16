@@ -21,8 +21,13 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^administrare/', include(admin.site.urls)),
+
     # Blogengine URLs
     url(r'^blog/', include('blogengine.urls')),
 
+    # Landing page URLs
     url(r'^$', include('landing.urls')),
+
+    # FlatPage URLs
+    url(r'', include('django.contrib.flatpages.urls')),
 ]
