@@ -8,4 +8,11 @@
         {{ object.text|custom_markdown }}
         <p><small>{{ object.pub_date }}</small></p>
         </div>
+
+        <nav>
+          <ul class="pager">
+            <li class="previous"><a href="/blog/"><span aria-hidden="true">&larr;</span> Article List</a></li>
+          </ul>
+        </nav>
+
     {% endblock %}
