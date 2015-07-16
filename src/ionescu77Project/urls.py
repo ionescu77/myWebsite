@@ -24,5 +24,5 @@ urlpatterns = [
     # Blogengine URLs
     url(r'^blog/', include('blogengine.urls')),
 
-    url(r'', include('landing.urls')),
+    url(r'^$', include('landing.urls')),
 ]

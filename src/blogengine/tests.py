@@ -1,3 +1,6 @@
+from django.contrib.flatpages.models import FlatPage
+from django.contrib.sites.models import Site
+
 from django.test import TestCase, LiveServerTestCase, Client
 
 from django.utils import timezone
@@ -34,7 +37,11 @@ class PostTest(TestCase):
       self.assertEquals(only_post.pub_date.minute, post.pub_date.minute)
       self.assertEquals(only_post.pub_date.second, post.pub_date.second)
 
-class AdminTest(LiveServerTestCase):
+class BaseAcceptanceTest(LiveServerTestCase):
+    def setUp(self):
+        self.client = Client()
+
+class AdminTest(BaseAcceptanceTest):
     # We need to fill the auth database for login test
     # python manage.py dumpdata auth.User --indent=2 > blogengine/fixtures/users.json
     fixtures = ['users.json']
@@ -158,7 +165,7 @@ class AdminTest(LiveServerTestCase):
         all_posts = Post.objects.all()
         self.assertEquals(len(all_posts), 0)
 
-class PostViewTest(LiveServerTestCase):
+class PostViewTest(BaseAcceptanceTest):
     def setUp(self):
         self.client = Client()
 
@@ -179,15 +186,16 @@ class PostViewTest(LiveServerTestCase):
         # Check post title is in response
         #print "%s" %response
         self.assertTrue(post.title in response.content)
-        # Check post text is in response, will fail with markdown
-        #self.assertTrue(post.text in response.content)
-        self.assertTrue(markdown.markdown(post.text) in response.content)
         # Check the post date is in the response
         self.assertTrue(str(post.pub_date.year) in response.content)
         self.assertTrue(post.pub_date.strftime('%b') in response.content)
         self.assertTrue(str(post.pub_date.day) in response.content)
-        # Check if link is markedup properly by markdown
-        self.assertTrue('<a href="http://127.0.0.1:8000/">markdown blog</a>' in response.content)
+        # Check if link is marked-up properly by markdown
+        #print "%s" %response.content
+        # need to add something like
+        # <a href="/blog/2015/7/my-first-test-post-for-view/">My first test post for View</a>
+        #
+        #self.assertTrue('<a href="http://127.0.0.1:8000/">markdown blog</a>' in response.content)
 
     def test_post_page(self):
         # Create the post
@@ -216,7 +224,8 @@ class PostViewTest(LiveServerTestCase):
         # Check the post title is in the response
         self.assertTrue(post.title in response.content)
 
-        # Check the post text is in the response
+        # Check post text is in response, will fail with markdown
+        #self.assertTrue(post.text in response.content)
         self.assertTrue(markdown.markdown(post.text) in response.content)
 
         # Check the post date is in the response
@@ -226,3 +235,6 @@ class PostViewTest(LiveServerTestCase):
 
         # Check the link is marked up properly
         self.assertTrue('<a href="http://127.0.0.1:8000/">my first blog post</a>' in response.content)
+
+
+# TEST for FLATPAGES Section
