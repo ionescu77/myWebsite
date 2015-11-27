@@ -2,17 +2,32 @@
 
     {% load custom_markdown %}
 
-    {% block content %}
-        <div class="post">
-        <h1>{{ object.title }}</h1>
-        {{ object.text|custom_markdown }}
-        <p><small>{{ object.pub_date }}</small></p>
+    {% block header %}
+        <div class="header">
+            <h1><code>Blog Post</code></h1>
         </div>
+    {% endblock %}
 
+    {% block content %}
+
+        <div class="post">
+          <nav>
+            <ul class="pager">
+              <li class="previous"><a href="/blog/"><span aria-hidden="true">&larr;</span> Article List</a></li>
+            </ul>
+          </nav>
+        <h1>{{ object.title }}</h1>
+        <p><small>{{ object.pub_date }}</small></p>
+        <hr>
+        <p class="text-justified">{{ object.text|custom_markdown }}</p>
+        <hr>
         <nav>
           <ul class="pager">
             <li class="previous"><a href="/blog/"><span aria-hidden="true">&larr;</span> Article List</a></li>
           </ul>
         </nav>
+
+        </div>
+
 
     {% endblock %}

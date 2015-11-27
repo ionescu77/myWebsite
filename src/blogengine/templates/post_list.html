@@ -2,13 +2,26 @@
 
   {% load custom_markdown %}
 
+  {% block header %}
+      <div class="header">
+          <h1><code>Blog</code></h1>
+      </div>
+  {% endblock %}
+
     {% block content %}
       {% if object_list %}
         {% for post in object_list %}
           <div class="post">
             <h1><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h1>
-            <p><small>{{ post.pub_date }}</small></p>
+            <span>
+            <ul class="pager pull-right">
+              <li class="previous"><a href="{{ post.get_absolute_url }}"> Article <span aria-hidden="true">&rarr;</span></a></li>
+            </ul>
+          </span>
+
+            <p><small> {{ post.pub_date }} <br> {{ post.title }} &middot; {{ post.text|truncatechars:159 }} </small></p>
           </div>
+
         {% endfor %}
       {% else %}
         <p>No posts found</p>
