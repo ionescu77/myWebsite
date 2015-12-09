@@ -1,12 +1,12 @@
 {
   "name": "static",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "authors": [
     "Razvan Andrei Ionescu <ionescu77@gmail.com>"
   ],
   "description": "Blog Bower Boostrap",
   "license": "MIT",
-  "homepage": "ionescu77.go.ro",
+  "homepage": "ionescu77.com",
   "ignore": [
     "**/.*",
     "node_modules",

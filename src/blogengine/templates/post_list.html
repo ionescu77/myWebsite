@@ -11,15 +11,23 @@
     {% block content %}
       {% if object_list %}
         {% for post in object_list %}
-          <div class="post">
-            <h1><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h1>
-            <span>
-            <ul class="pager pull-right">
-              <li class="previous"><a href="{{ post.get_absolute_url }}"> Article <span aria-hidden="true">&rarr;</span></a></li>
-            </ul>
-          </span>
+              <div class="post">
+                <div class="col-sm-10">
+                <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+              </div><!-- /.col-lg-12-->
 
-            <p><small> {{ post.pub_date }} <br> {{ post.title }} &middot; {{ post.text|truncatechars:159 }} </small></p>
+              <div class="col-sm-2">
+                <span>
+                <ul class="pager pull-right">
+                  <li class="previous"><a href="{{ post.get_absolute_url }}"> Read <span aria-hidden="true">&rarr;</span></a></li>
+                </ul>
+              </span>
+            </div><!-- /.col-sm-2-->
+
+            <div class="col-sm-12">
+              <p><small> {{ post.pub_date }} <br> {{ post.title }} &middot; {{ post.text|truncatechars:159 }} </small></p>
+            </div><!-- /.col-lg-12-->
+
           </div>
 
         {% endfor %}
@@ -27,11 +35,23 @@
         <p>No posts found</p>
       {% endif %}
 
-        {% if page_obj.has_previous %}
-          <a href="/{{ page_obj.previous_page_number }}/">Previous Page</a>
+      <div class="col-sm-12 text-center">
+        <span>
+          <br>
+        <ul class="pager">
+          {% if page_obj.has_previous %}
+          <li><a href="/blog/{{ page_obj.previous_page_number }}/"><span aria-hidden="true">&larr;</span> Prev</a></li>
+          {% else %}
+          <li class="disabled"><a href=""><span aria-hidden="true">&larr;</span> Prev</a></li>
           {% endif %}
           {% if page_obj.has_next %}
-          <a href="/{{ page_obj.next_page_number }}/">Next Page</a>
-        {% endif %}
+          <li><a href="/blog/{{ page_obj.next_page_number }}/">Next <span aria-hidden="true">&rarr;</span></a></li>
+          {% else %}
+          <li class="disabled"><a href="">Next <span aria-hidden="true">&rarr;</span></a></li>
+          {% endif %}
+        </ul>
+        </span>
+
+      </div><!-- /.col-lg-12-->
 
     {% endblock %}
