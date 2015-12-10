@@ -1,5 +1,9 @@
+# This is for unicode characters in some unit tests:
+# -*- coding: utf-8 -*-
+
 from django.contrib.flatpages.models import FlatPage
 from django.contrib.sites.models import Site
+from django.utils.encoding import smart_unicode
 
 from django.test import TestCase, LiveServerTestCase, Client
 
@@ -30,6 +34,32 @@ class PostTest(TestCase):
       print '%s' %(only_post.text)
       self.assertEquals(only_post.text, 'This is my test blog post')
       self.assertEquals(only_post.slug, 'my-test-post')
+      self.assertEquals(only_post.pub_date.day, post.pub_date.day)
+      self.assertEquals(only_post.pub_date.month, post.pub_date.month)
+      self.assertEquals(only_post.pub_date.year, post.pub_date.year)
+      self.assertEquals(only_post.pub_date.hour, post.pub_date.hour)
+      self.assertEquals(only_post.pub_date.minute, post.pub_date.minute)
+      self.assertEquals(only_post.pub_date.second, post.pub_date.second)
+
+    def test_create_romanian_post(self):
+      post = Post()
+      # Set attributes including romanian characters "diacritice"
+      post.title = 'Testul cu șțăîâ'
+      post.text = 'Ăsta este textul de test cu ăîșțâ'
+      post.slug = 'testul-cu-staia'      # testing prepopulated fields in admin is out of scope now. So we pass.
+      post.pub_date = timezone.now()
+      post.save()
+      # Check if we can find it
+      all_posts = Post.objects.all()
+      self.assertEquals(len(all_posts), 1)
+      only_post = all_posts[0]
+      self.assertEquals(only_post, post)
+
+      # Check attributes
+      self.assertEquals(only_post.title, u'Testul cu șțăîâ')
+      print '%s' %(only_post.text)
+      self.assertEquals(only_post.text, u'Ăsta este textul de test cu ăîșțâ')
+      self.assertEquals(only_post.slug, 'testul-cu-staia')
       self.assertEquals(only_post.pub_date.day, post.pub_date.day)
       self.assertEquals(only_post.pub_date.month, post.pub_date.month)
       self.assertEquals(only_post.pub_date.year, post.pub_date.year)
