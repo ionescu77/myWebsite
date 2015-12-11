@@ -17,11 +17,11 @@ install:
 
 before_script:
     - psql -c "CREATE DATABASE travisci;" -U postgres
-    - cd src; python manage.py syncdb --noinput
+    - cd src; python manage.py makemigrations; python manage.py migrate
 
 # command to run tests
 script:
-    nosetests
+    - coverage run --include="blogengine/*" --omit="blogengine/migrations/*" manage.py test blogengine
 
 after_success:
     coveralls
