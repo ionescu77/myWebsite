@@ -2,20 +2,11 @@ import os
 from .base import *
 
 SECRET_KEY=os.environ['SECRET_KEY_RAZ']
-DB_USER_IONESCU77=os.environ['DB_USER_IONESCU77']
-DB_PASS_IONESCU77=os.environ['DB_PASS_IONESCU77']
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ionescu77db',
-        'USER': DB_USER_IONESCU77,
-        'PASSWORD': DB_PASS_IONESCU77,
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
-}
 
+# Setup Database
+from .database_staging import DATABASES
+DATABASES = DATABASES
 
 DEBUG = False
 TEMPLATE_DEBUG = False
