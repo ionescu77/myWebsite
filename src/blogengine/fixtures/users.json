@@ -9,16 +9,12 @@
     "is_staff": true,
     "last_login": "2015-05-28T23:34:45Z",
     "groups": [],
-    "user_permissions": [
-      19,
-      20,
-      21
-    ],
+    "user_permissions": [    ],
     "password": "pbkdf2_sha256$20000$xE0ItpkqfQyj$Cn6QfeM0ts8t5SNkB+fke20YUctjwl2ax9NyVjfaRNs=",
     "email": "",
     "date_joined": "2015-05-28T22:29:54Z"
   },
   "model": "auth.user",
-  "pk": 2
+  "pk": 1
 }
 ]
