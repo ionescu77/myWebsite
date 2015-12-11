@@ -7,3 +7,7 @@ pip-selfcheck.json
 *.sqlite3
 *.pyc
 src/blogengine/static/bower_components/
+
+reports/
+htmlcov/
+.coverage
