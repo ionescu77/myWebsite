@@ -4,7 +4,7 @@ Notes to (mainly) myself:
 
 Codul sursă de la site-ul meu, încă nepublicat și mereu în lucru.
 
-A zis să public codul poate asta mă motivează să îi dau bice și să încep să și scriu câte ceva.
+Am zis să public codul poate asta mă motivează să îi dau bice și să încep să mai și scriu câte ceva.
 
 [![Build Status](https://travis-ci.org/ionescu77/myWebsite.svg)](https://travis-ci.org/ionescu77/myWebsite)
 
