@@ -32,6 +32,9 @@ MEDIA_ROOT = "/var/www/myProjects/ionescu77/media/"
 
 INSTALLED_APPS += ('django_jenkins',)
 
-JENKINS_TASKS = ()
+JENKINS_TASKS = (
+    'django_jenkins.tasks.run_pylint',
+    'django_jenkins.tasks.with_coverage',
+    )
 
 PROJECT_APPS = ['blogengine']
