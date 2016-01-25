@@ -256,7 +256,7 @@ class PostViewTest(BaseAcceptanceTest):
 
         # Check post text is in response, will fail with markdown
         #self.assertTrue(post.text in response.content)
-        self.assertTrue(markdown.markdown(post.text) in response.content)
+        self.assertTrue(markdown.markdown(post.text) in response.content.decode('utf-8'))
 
         # Check the post date is in the response
         self.assertTrue(str(post.pub_date.year) in response.content)
@@ -302,4 +302,3 @@ class FlatPageViewTest(BaseAcceptanceTest):
         # Get title and content in the response
         self.assertTrue('About Me' in response.content)
         self.assertTrue('All about me. Well almost ...' in response.content)
-        
