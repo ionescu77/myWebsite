@@ -254,7 +254,7 @@ class PostViewTest(BaseAcceptanceTest):
         # Check the post title is in the response
         self.assertTrue(post.title in response.content)
 
-        # Check post text is in response, will fail with markdown
+        # Check post text is in response, will fail with markdown unless UTF8 decode
         #self.assertTrue(post.text in response.content)
         self.assertTrue(markdown.markdown(post.text) in response.content.decode('utf-8'))
 

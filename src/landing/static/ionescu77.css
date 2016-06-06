@@ -44,12 +44,12 @@ code {
 }
 
 p {
-    font-size: 14px;
-    line-height: 1.75;
+    font-size: 18px;
+/*    line-height: 1.5;*/
 }
 
-p.large {
-    font-size: 16px;
+p.lower {
+    font-size: 14px;
 }
 
 a,
