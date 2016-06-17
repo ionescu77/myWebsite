@@ -219,7 +219,7 @@ class AdminTest(BaseAcceptanceTest):
             'pub_date_0': '2013-12-28',
             'pub_date_1': '22:00:04',
             'slug': 'my-first-post',
-            'category': '1'
+            'category': str(category.pk)
         },
         follow=True
         )
