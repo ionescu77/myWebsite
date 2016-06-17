@@ -8,12 +8,35 @@ from django.utils.encoding import smart_unicode
 from django.test import TestCase, LiveServerTestCase, Client
 
 from django.utils import timezone
-from blogengine.models import Post
+from blogengine.models import Post, Category
 import markdown2 as markdown
 
 # Create your tests here.
 class PostTest(TestCase):
+    def test_create_category(self):
+      # Create the category
+      category = Category()
+      # Add attributes
+      category.name = 'python'
+      category.description = 'Python the programming language'
+      # Save it
+      category.save()
+      # Check if we can find it
+      all_categories = Category.objects.all()
+      self.assertEquals(len(all_categories), 1)
+      only_category = all_categories[0]
+      self.assertEquals(only_category, category)
+      # Check attributes
+      self.assertEquals(only_category.name, 'python')
+      self.assertEquals(only_category.description, 'Python the programming language')
+
     def test_create_post(self):
+      # Create the category
+      category = Category()
+      category.name = 'python'
+      category.description = 'Python the programming language'
+      category.save()
+
       # Create the post
       post = Post()
       # Set the attributes
@@ -21,6 +44,7 @@ class PostTest(TestCase):
       post.text = 'This is my test blog post'
       post.slug = 'my-test-post'
       post.pub_date = timezone.now()
+      post.category = category
       # Save it
       post.save()
       # Check if we can find it
@@ -40,6 +64,8 @@ class PostTest(TestCase):
       self.assertEquals(only_post.pub_date.hour, post.pub_date.hour)
       self.assertEquals(only_post.pub_date.minute, post.pub_date.minute)
       self.assertEquals(only_post.pub_date.second, post.pub_date.second)
+      self.assertEquals(only_post.category.name, 'python')
+      self.assertEquals(only_post.category.description, 'Python the programming language')
 
     def test_create_romanian_post(self):
       post = Post()
@@ -112,7 +138,72 @@ class AdminTest(BaseAcceptanceTest):
         self.assertTrue('Log in' in response.content)
 
     # The admin interface implements URLs for creating new instances of a model in a consistent format of /administrare/app_name/model_name/add/
+    def test_create_category(self):
+        # Log in
+        self.client.login(username='testuser', password="test")
+        # Check response code
+        response = self.client.get('/administrare/blogengine/category/add/')
+        self.assertEquals(response.status_code, 200)
+        # Create the new category
+        response = self.client.post('/administrare/blogengine/category/add/', {
+            'name': 'python',
+            'description': 'The Python programming language'
+            },
+            follow=True
+        )
+        self.assertEquals(response.status_code, 200)
+        # Check added successfully
+        self.assertTrue('added successfully' in response.content)
+        # Check new category now in database
+        all_categories = Category.objects.all()
+        self.assertEquals(len(all_categories), 1)
+    def test_edit_category(self):
+        # Create the category
+        category = Category()
+        category.name = 'python'
+        category.description = 'The Python programming language'
+        category.save()
+        # Log in
+        self.client.login(username='testuser', password="test")
+        # Edit the category
+        response = self.client.post('/administrare/blogengine/category/' + str(category.pk) + '/', {
+            'name': 'perl',
+            'description': 'The Perl programming language'
+            }, follow=True)
+        self.assertEquals(response.status_code, 200)
+        # Check changed successfully
+        self.assertTrue('changed successfully' in response.content)
+        # Check category amended
+        all_categories = Category.objects.all()
+        self.assertEquals(len(all_categories), 1)
+        only_category = all_categories[0]
+        self.assertEquals(only_category.name, 'perl')
+        self.assertEquals(only_category.description, 'The Perl programming language')
+    def test_delete_category(self):
+        # Create the category
+        category = Category()
+        category.name = 'python'
+        category.description = 'The Python programming language'
+        category.save()
+        # Log in
+        self.client.login(username='testuser', password="test")
+        # Delete the category
+        response = self.client.post('/administrare/blogengine/category/' + str(category.pk) + '/delete/', {
+            'post': 'yes'
+        }, follow=True)
+        self.assertEquals(response.status_code, 200)
+        # Check deleted successfully
+        self.assertTrue('deleted successfully' in response.content)
+        # Check category deleted
+        all_categories = Category.objects.all()
+        self.assertEquals(len(all_categories), 0)
+
     def test_create_admin_post(self):
+        # Create the category
+        category = Category()
+        category.name = 'python'
+        category.description = 'The Python programming language'
+        category.save()
         # Log in
         self.client.login(username='testuser', password='test')
         # Check 'Log in' in admin webpage
@@ -127,7 +218,8 @@ class AdminTest(BaseAcceptanceTest):
             'text': 'This is my first post',
             'pub_date_0': '2013-12-28',
             'pub_date_1': '22:00:04',
-            'slug': 'my-first-post'
+            'slug': 'my-first-post',
+            'category': '1'
         },
         follow=True
         )
@@ -141,6 +233,11 @@ class AdminTest(BaseAcceptanceTest):
         self.assertEquals(len(all_posts), 1)
 
     def test_edit_post(self):
+        # Create the category
+        category = Category()
+        category.name = 'python'
+        category.description = 'The Python programming language'
+        category.save()
         # Log in
         self.client.login(username='testuser', password='test')
         # Create the post
@@ -156,12 +253,14 @@ class AdminTest(BaseAcceptanceTest):
             'text': 'This is my EDITED editable blog post',
             'pub_date_0': '2015-05-28',
             'pub_date_1': '23:00:04',
-            'slug': 'my-edited-post'
+            'slug': 'my-edited-post',
+            'category': str(category.pk)
         },
         follow=True
         )
         self.assertEquals(response.status_code, 200)
         # Check changed successfully
+        # print '%s' %category.pk
         self.assertTrue('changed successfully' in response.content)
         # Check post amended
         all_posts = Post.objects.all()
@@ -171,12 +270,18 @@ class AdminTest(BaseAcceptanceTest):
         self.assertEquals(only_post.text, 'This is my EDITED editable blog post')
 
     def test_delete_post(self):
+        # Create the category
+        category = Category()
+        category.name = 'python'
+        category.description = 'The Python programming language'
+        category.save()
         # Create the post
         post = Post()
         post.title = 'My deletable post'
         post.text = 'This is my first deletable post'
         post.slug = 'my-deletable-post'
         post.pub_date = timezone.now()
+        post.category = category
         post.save()
         # Check new post saved
         all_posts = Post.objects.all()
@@ -200,12 +305,18 @@ class PostViewTest(BaseAcceptanceTest):
         self.client = Client()
 
     def test_index(self):
+        # Create the category
+        category = Category()
+        category.name = 'python'
+        category.description = 'The Python programming language'
+        category.save()
         # Create the post
         post = Post()
         post.title = 'My first test post for View'
         post.text = 'This the first test post for view. And [markdown blog](http://127.0.0.1:8000/)'
         post.slug = 'my-first-test-post-for-view'
         post.pub_date = timezone.now()
+        post.category = category
         post.save()
         # Check post saved
         all_posts = Post.objects.all()
@@ -216,6 +327,9 @@ class PostViewTest(BaseAcceptanceTest):
         # Check post title is in response
         #print "%s" %response
         self.assertTrue(post.title in response.content)
+        # Check post text is in response
+        #print "%s" %response
+        self.assertTrue(markdown.markdown(post.text) in response.content.decode('utf-8'))
         # Check the post date is in the response
         self.assertTrue(str(post.pub_date.year) in response.content)
         self.assertTrue(post.pub_date.strftime('%b') in response.content)
@@ -225,15 +339,21 @@ class PostViewTest(BaseAcceptanceTest):
         # need to add something like
         # <a href="/blog/2015/7/my-first-test-post-for-view/">My first test post for View</a>
         #
-        #self.assertTrue('<a href="http://127.0.0.1:8000/">markdown blog</a>' in response.content)
+        self.assertTrue('<a href="http://127.0.0.1:8000/">markdown blog</a>' in response.content)
 
     def test_post_page(self):
+        # Create the category
+        category = Category()
+        category.name = 'python'
+        category.description = 'The Python programming language'
+        category.save()
         # Create the post
         post = Post()
         post.title = 'My first post'
         post.text = 'This is [my first blog post](http://127.0.0.1:8000/)'
         post.slug = 'my-first-post'
         post.pub_date = timezone.now()
+        post.category = category
         post.save()
 
         # Check new post saved
