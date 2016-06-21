@@ -4,38 +4,40 @@
 
   {% block header %}
       <div class="header">
-          <h1><code>Blog</code></h1>
+          <h1><code>Categories</code></h1>
       </div>
   {% endblock %}
 
     {% block content %}
       {% if object_list %}
         {% for post in object_list %}
-              <div class="post">
-                <div class="col-sm-10">
-                <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
-              </div><!-- /.col-lg-12-->
+        <div class="post">
+          <div class="col-sm-10">
+          <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+        </div><!-- /.col-lg-12-->
 
-              <div class="col-sm-2">
-                <span>
-                <ul class="pager pull-right">
-                  <li class="previous"><a href="{{ post.get_absolute_url }}"> Read <span aria-hidden="true">&rarr;</span></a></li>
-                </ul>
-              </span>
-            </div><!-- /.col-sm-2-->
+        <div class="col-sm-2">
+          <span>
+          <ul class="pager pull-right">
+            <li class="previous"><a href="{{ post.get_absolute_url }}"> Read <span aria-hidden="true">&rarr;</span></a></li>
+          </ul>
+        </span>
+      </div><!-- /.col-sm-2-->
 
-            <div class="col-sm-12">
-              <p>
-                <small>
-                  {{ post.pub_date }}
-                  <a href="{{ post.category.get_absolute_url }}">{{ post.category.name }}</a>
-                  <br>
-                  {{ post.text | custom_markdown | truncatechars_html:159 }}
-                </small>
-              </p>
-            </div><!-- /.col-lg-12-->
+      <div class="col-sm-12">
+        <p>
+          <small>
+            {{ post.pub_date }}
+            {% if post.category %}
+              <a href="{{ post.category.get_absolute_url }}"><span class="label label-primary">{{ post.category.name }}</span></a>
+            {% endif %}
+            <br>
+            {{ post.text | custom_markdown | truncatechars_html:159 }}
+          </small>
+        </p>
+      </div><!-- /.col-lg-12-->
 
-          </div>
+    </div>
 
         {% endfor %}
       {% else %}

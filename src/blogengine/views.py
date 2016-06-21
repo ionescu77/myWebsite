@@ -5,8 +5,19 @@ from django.views.generic import ListView, DetailView
 #from django.utils.safestring import mark_safe
 #import markdown2
 
-from blogengine.models import Post
+from blogengine.models import Post, Category
+
 # Create your views here.
+class CategoryListView(ListView):
+    template_name = 'category_list.html'
+
+    def get_queryset(self):
+        slug = self.kwargs['slug']
+        try:
+            category = Category.objects.get(slug=slug)
+            return Post.objects.filter(category=category)
+        except Category.DoesNotExist:
+            return Post.objects.none()
 
 class PostListView(ListView):
     model = Post

@@ -17,7 +17,12 @@
             </ul>
           </nav>
         <h2>{{ object.title }}</h2>
-        <p><small>{{ object.pub_date }}</small></p>
+        <p>
+          <small>
+            {{ object.pub_date }}
+            <a href="{{ post.category.get_absolute_url }}">{{ post.category.name }}</a>
+          </small>
+        </p>
         <hr>
         <p class="text-justified">{{ object.text|custom_markdown }}</p>
         <hr>
