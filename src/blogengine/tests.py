@@ -430,6 +430,13 @@ class PostViewTest(BaseAcceptanceTest):
         category.name = 'python'
         category.description = 'The Python programming language'
         category.save()
+
+        # Create the tag
+        tag = Tag()
+        tag.name = 'pythonsky'
+        tag.description = 'The Pythonsky programming language'
+        tag.save()
+
         # Create the post
         post = Post()
         post.title = 'My first test post for View'
@@ -438,6 +445,7 @@ class PostViewTest(BaseAcceptanceTest):
         post.pub_date = timezone.now()
         post.category = category
         post.save()
+        post.tags.add(tag)
         # Check post saved
         all_posts = Post.objects.all()
         self.assertEquals(len(all_posts), 1)
@@ -448,10 +456,13 @@ class PostViewTest(BaseAcceptanceTest):
         #print "%s" %response
         self.assertTrue(post.title in response.content)
         # Check post text is in response
-        # Check the post category is in the response
-        self.assertTrue(post.category.name in response.content)
         #print "%s" %response
         self.assertTrue(markdown.markdown(post.text) in response.content.decode('utf-8'))
+        # Check the post category is in the response
+        self.assertTrue(post.category.name in response.content)
+        # Check the post tag is in the response
+        post_tag = all_posts[0].tags.all()[0]
+        self.assertTrue(post_tag.name in response.content.decode('utf-8'))
         # Check the post date is in the response
         self.assertTrue(str(post.pub_date.year) in response.content)
         self.assertTrue(post.pub_date.strftime('%b') in response.content)
@@ -469,6 +480,11 @@ class PostViewTest(BaseAcceptanceTest):
         category.name = 'python'
         category.description = 'The Python programming language'
         category.save()
+        # Create the tag
+        tag = Tag()
+        tag.name = 'pythonsky'
+        tag.description = 'The Pythonsky programming language'
+        tag.save()
         # Create the post
         post = Post()
         post.title = 'My first post'
@@ -476,6 +492,8 @@ class PostViewTest(BaseAcceptanceTest):
         post.slug = 'my-first-post'
         post.pub_date = timezone.now()
         post.category = category
+        post.save()
+        post.tags.add(tag)
         post.save()
 
         # Check new post saved
@@ -498,6 +516,10 @@ class PostViewTest(BaseAcceptanceTest):
 
         # Check the post category is in the response
         self.assertTrue(post.category.name in response.content)
+
+        # Check the post category is in the response
+        post_tag = all_posts[0].tags.all()[0]
+        self.assertTrue(post_tag.name in response.content.decode('utf-8'))
 
         # Check post text is in response, will fail with markdown unless UTF8 decode
         #self.assertTrue(post.text in response.content)
@@ -531,37 +553,69 @@ class PostViewTest(BaseAcceptanceTest):
         self.assertEqual(len(all_posts), 1)
         only_post = all_posts[0]
         self.assertEqual(only_post, post)
-
         # Get the category URL
         category_url = post.category.get_absolute_url()
-
         # Fetch the non-existing category to test view exception
         response = self.client.get("/blog/category/non-existing")
         self.assertEqual(response.status_code, 200)
-
         # Check empty querySet objects.none() - returns "No posts found"
-        self.assertTrue('No posts found' in response.content.decode('utf-8'))
-
+        self.assertTrue('no posts found' in response.content.decode('utf-8'))
         # Fetch the category
         response = self.client.get(category_url)
         self.assertEqual(response.status_code, 200)
-
         # Check the category name is in the response
         self.assertTrue(post.category.name in response.content.decode('utf-8'))
-
         # Check the post text is in the response
         self.assertTrue(markdown.markdown(post.text) in response.content.decode('utf-8'))
-
         # Check the post date is in the response
         self.assertTrue(str(post.pub_date.year) in response.content.decode('utf-8'))
         self.assertTrue(post.pub_date.strftime('%b') in response.content.decode('utf-8'))
         self.assertTrue(str(post.pub_date.day) in response.content.decode('utf-8'))
-
         # Check the link is marked up properly
         self.assertTrue('<a href="http://127.0.0.1:8000/">my first blog post</a>' in response.content.decode('utf-8'))
-
         # Check the correct template was used
         self.assertTemplateUsed(response, 'category_list.html')
+
+    def test_tag_page(self):
+        # Create the tag
+        tag = Tag()
+        tag.name = 'pythonsky'
+        tag.description = 'The Pythonsky programming language'
+        tag.save()
+        # Create the post
+        post = Post()
+        post.title = 'My tagged post'
+        post.text = 'This is [my tagged blog post](http://127.0.0.1:8000/)'
+        post.slug = 'my-tagged-post'
+        post.pub_date = timezone.now()
+        post.save()
+        post.tags.add(tag)
+        # Check new post saved
+        all_posts = Post.objects.all()
+        self.assertEquals(len(all_posts), 1)
+        only_post = all_posts[0]
+        self.assertEquals(only_post, post)
+        # Get the tag URL
+        tag_url = post.tags.all()[0].get_absolute_url()
+        # Fetch the non-existing tag to test view exception
+        response = self.client.get("/blog/tag/non-existing")
+        self.assertEqual(response.status_code, 200)
+        # Check empty querySet objects.none() - returns "No posts found"
+        self.assertTrue('no coresponding posts found' in response.content.decode('utf-8'))
+
+        # Fetch the tag
+        response = self.client.get(tag_url)
+        self.assertEquals(response.status_code, 200)
+        # Check the tag name is in the response
+        self.assertTrue(post.tags.all()[0].name in response.content.decode('utf-8'))
+        # Check the post text is in the response
+        self.assertTrue(markdown.markdown(post.text) in response.content.decode('utf-8'))
+        # Check the post date is in the response
+        self.assertTrue(str(post.pub_date.year) in response.content)
+        self.assertTrue(post.pub_date.strftime('%b') in response.content)
+        self.assertTrue(str(post.pub_date.day) in response.content)
+        # Check the link is marked up properly
+        self.assertTrue('<a href="http://127.0.0.1:8000/">my tagged blog post</a>' in response.content)
 
 # TEST for FLATPAGES Section
 class FlatPageViewTest(BaseAcceptanceTest):

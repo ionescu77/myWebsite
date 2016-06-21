@@ -4,7 +4,7 @@
 
   {% block header %}
       <div class="header">
-          <h1><code>Categories</code></h1>
+          <h1><code>Tags</code></h1>
       </div>
   {% endblock %}
 
@@ -33,6 +33,14 @@
             {% endif %}
             <br>
             {{ post.text | custom_markdown | truncatechars_html:159 }}
+            {% if post.tags %}
+              <div class="col-md-12">
+              {% for tag in post.tags.all %}
+                <a href="{{ tag.get_absolute_url }}"><span class="label label-success">{{ tag.name }}</span></a>
+              {% endfor %}
+              </div>
+            {% endif %}
+
           </small>
         </p>
       </div><!-- /.col-lg-12-->
@@ -41,9 +49,9 @@
 
         {% endfor %}
       {% else %}
-      <div class="col-sm-12">
-        <p>Category not found, sorry no posts found!</p>
-      </div><!-- /.col-lg-12-->
+        <div class="col-sm-12">
+          <p>Tag not found, sorry no coresponding posts found</p>
+        </div><!-- /.col-lg-12-->
       {% endif %}
 
       <div class="col-sm-12 text-center">
