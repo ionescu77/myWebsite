@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from blogengine.models import Post, Category
+from blogengine.models import Post, Category, Tag
 from blogengine.views import PostListView, DetailView, CategoryListView
 
 urlpatterns = [
@@ -19,4 +19,13 @@ urlpatterns = [
         paginate_by=5,
         model=Category,
         )),
+
+    # Tags
+    url(r'^tag/(?P<slug>[a-zA-Z0-9-]+)/?$',
+     CategoryListView.as_view(
+        paginate_by=5,
+        model=Tag,
+        )),
+
+
 ]
