@@ -416,6 +416,13 @@ class PostViewTest(BaseAcceptanceTest):
         category_url = post.category.get_absolute_url()
         #print "%s" %category_url
 
+        # Fetch the non-existing category to test view exception
+        response = self.client.get("/blog/category/non-existing")
+        self.assertEqual(response.status_code, 200)
+
+        # Check empty querySet objects.none() - returns "No posts found"
+        self.assertTrue('No posts found' in response.content.decode('utf-8'))
+
         # Fetch the category
         response = self.client.get(category_url)
         self.assertEqual(response.status_code, 200)

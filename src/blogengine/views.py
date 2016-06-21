@@ -17,7 +17,7 @@ class CategoryListView(ListView):
             category = Category.objects.get(slug=slug)
             return Post.objects.filter(category=category)
         except Category.DoesNotExist:
-            return Post.objects.none()
+            return Post.objects.none()                      # returns "No posts found"
 
 class PostListView(ListView):
     model = Post
