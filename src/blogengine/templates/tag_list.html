@@ -4,31 +4,31 @@
 
   {% block header %}
       <div class="header">
-          <h1><code>Blog</code></h1>
+          <h1><code>Tags</code></h1>
       </div>
   {% endblock %}
 
     {% block content %}
       {% if object_list %}
         {% for post in object_list %}
-            <div class="post">
-              <div class="row">
-                <div class="col-sm-12">
-                  <!-- <span class="pull-left"> -->
-                    <h2>
-                      <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-                    </h2>
-                  <!-- </span> -->
-                </div><!-- /.col-sm-12-->
-              </div><!-- /.row-->
+          <div class="post">
+            <div class="row">
+              <div class="col-sm-12">
+                <!-- <span class="pull-left"> -->
+                  <h2>
+                    <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                  </h2>
+                <!-- </span> -->
+              </div><!-- /.col-sm-12-->
+            </div><!-- /.row-->
 
             <!-- <div class="col-sm-2">
-              <span>
-              <ul class="pager pull-right">
-                <li class="previous"><a href="{{ post.get_absolute_url }}"> Read <span aria-hidden="true">&rarr;</span></a></li>
-              </ul>
-            </span>
-          </div> --> <!-- /.col-sm-2-->
+                <span>
+                <ul class="pager pull-right">
+                  <li class="previous"><a href="{{ post.get_absolute_url }}"> Read <span aria-hidden="true">&rarr;</span></a></li>
+                </ul>
+              </span>
+            </div> --> <!-- /.col-sm-2-->
 
             <div class="row">
               <div class="col-sm-12">
@@ -53,12 +53,11 @@
               </div><!-- /.col-sm-12-->
             </div class="row"><!-- /.row-->
 
-          </div>
-
+          </div><!-- /.post-->
         {% endfor %}
       {% else %}
         <div class="col-sm-12">
-          <p>Category not found, sorry no posts found!</p>
+          <p>Tag not found, sorry no coresponding posts found</p>
         </div><!-- /.col-lg-12-->
       {% endif %}
 

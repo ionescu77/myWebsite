@@ -8,7 +8,7 @@ from django.utils.encoding import smart_unicode
 from django.test import TestCase, LiveServerTestCase, Client
 
 from django.utils import timezone
-from blogengine.models import Post, Category
+from blogengine.models import Post, Category, Tag
 import markdown2 as markdown
 
 # Create your tests here.
@@ -30,12 +30,35 @@ class PostTest(TestCase):
       self.assertEquals(only_category.name, 'python')
       self.assertEquals(only_category.description, 'Python the programming language')
 
+    def test_create_tag(self):
+      # Create the tag
+      tag = Tag()
+      # Add attributes
+      tag.name = 'pythonsky'
+      tag.description = 'Pythonsky the programming language'
+      # Save it
+      tag.save()
+      # Check if we can find it
+      all_tags = Tag.objects.all()
+      self.assertEquals(len(all_tags), 1)
+      only_tag = all_tags[0]
+      self.assertEquals(only_tag, tag)
+      # Check attributes
+      self.assertEquals(only_tag.name, 'pythonsky')
+      self.assertEquals(only_tag.description, 'Pythonsky the programming language')
+
     def test_create_post(self):
       # Create the category
       category = Category()
       category.name = 'python'
       category.description = 'Python the programming language'
       category.save()
+
+      # Create the tag
+      tag = Tag()
+      tag.name = 'pythonsky'
+      tag.description = 'Pythonsky the programming language'
+      tag.save()
 
       # Create the post
       post = Post()
@@ -47,6 +70,11 @@ class PostTest(TestCase):
       post.category = category
       # Save it
       post.save()
+
+      # Add the tag only after creating post
+      post.tags.add(tag)
+      post.save()
+
       # Check if we can find it
       all_posts = Post.objects.all()
       self.assertEquals(len(all_posts), 1)
@@ -55,7 +83,7 @@ class PostTest(TestCase):
 
       # Check attributes
       self.assertEquals(only_post.title, 'My test post')
-      print '%s' %(only_post.text)
+      #print '%s' %(only_post.text)
       self.assertEquals(only_post.text, 'This is my test blog post')
       self.assertEquals(only_post.slug, 'my-test-post')
       self.assertEquals(only_post.pub_date.day, post.pub_date.day)
@@ -66,6 +94,14 @@ class PostTest(TestCase):
       self.assertEquals(only_post.pub_date.second, post.pub_date.second)
       self.assertEquals(only_post.category.name, 'python')
       self.assertEquals(only_post.category.description, 'Python the programming language')
+
+      # Check tags
+      post_tags = only_post.tags.all()
+      self.assertEquals(len(post_tags), 1)
+      only_post_tag = post_tags[0]
+      self.assertEquals(only_post_tag, tag)
+      self.assertEquals(only_post_tag.name, 'pythonsky')
+      self.assertEquals(only_post_tag.description, 'Pythonsky the programming language')
 
     def test_create_romanian_post(self):
       post = Post()
@@ -198,12 +234,80 @@ class AdminTest(BaseAcceptanceTest):
         all_categories = Category.objects.all()
         self.assertEquals(len(all_categories), 0)
 
+    def test_create_tag(self):
+        # Log in
+        self.client.login(username='testuser', password='test')
+        # Check response code
+        response = self.client.get('/administrare/blogengine/tag/add/')
+        self.assertEquals(response.status_code, 200)
+        # Create the new tag
+        response = self.client.post('/administrare/blogengine/tag/add/', {
+            'name': 'pythonsky',
+            'description': 'The Pythonsky programming language'
+            },
+            follow=True
+        )
+        self.assertEquals(response.status_code, 200)
+        # Check added successfully
+        self.assertTrue('added successfully' in response.content)
+        # Check new tag now in database
+        all_tags = Tag.objects.all()
+        self.assertEquals(len(all_tags), 1)
+    def test_edit_tag(self):
+        # Create the tag
+        tag = Tag()
+        tag.name = 'pythonsky'
+        tag.description = 'The Pythonsky programming language'
+        tag.save()
+        # Log in
+        self.client.login(username='testuser', password='test')
+        # Edit the tag
+        response = self.client.post('/administrare/blogengine/tag/' + str(tag.pk) + '/', {
+            'name': 'perlsky',
+            'description': 'The Perlsky programming language'
+            }, follow=True)
+        self.assertEquals(response.status_code, 200)
+        # Check changed successfully
+        self.assertTrue('changed successfully' in response.content)
+        # Check tag amended
+        all_tags = Tag.objects.all()
+        self.assertEquals(len(all_tags), 1)
+        only_tag = all_tags[0]
+        self.assertEquals(only_tag.name, 'perlsky')
+        self.assertEquals(only_tag.description, 'The Perlsky programming language')
+    def test_delete_tag(self):
+        # Create the tag
+        tag = Tag()
+        tag.name = 'python'
+        tag.description = 'The Python programming language'
+        tag.save()
+        # Log in
+        self.client.login(username='testuser', password='test')
+        # Delete the tag
+        response = self.client.post('/administrare/blogengine/tag/' + str(tag.pk) + '/delete/', {
+            'post': 'yes'
+        }, follow=True)
+        self.assertEquals(response.status_code, 200)
+        # Check deleted successfully
+        self.assertTrue('deleted successfully' in response.content)
+        # Check tag deleted
+        all_tags = Tag.objects.all()
+        self.assertEquals(len(all_tags), 0)
+
+
     def test_create_admin_post(self):
         # Create the category
         category = Category()
         category.name = 'python'
         category.description = 'The Python programming language'
         category.save()
+
+        # Create the tag
+        tag = Tag()
+        tag.name = 'pythonsky'
+        tag.description = 'The Pythonsky programming language'
+        tag.save()
+
         # Log in
         self.client.login(username='testuser', password='test')
         # Check 'Log in' in admin webpage
@@ -219,7 +323,8 @@ class AdminTest(BaseAcceptanceTest):
             'pub_date_0': '2013-12-28',
             'pub_date_1': '22:00:04',
             'slug': 'my-first-post',
-            'category': str(category.pk)
+            'category': str(category.pk),
+            'tags': str(tag.pk)
         },
         follow=True
         )
@@ -238,6 +343,13 @@ class AdminTest(BaseAcceptanceTest):
         category.name = 'python'
         category.description = 'The Python programming language'
         category.save()
+
+        # Create the tag
+        tag = Tag()
+        tag.name = 'pythonsky'
+        tag.description = 'The Pythonsky programming language'
+        tag.save()
+
         # Log in
         self.client.login(username='testuser', password='test')
         # Create the post
@@ -254,7 +366,8 @@ class AdminTest(BaseAcceptanceTest):
             'pub_date_0': '2015-05-28',
             'pub_date_1': '23:00:04',
             'slug': 'my-edited-post',
-            'category': str(category.pk)
+            'category': str(category.pk),
+            'tags': str(tag.pk)
         },
         follow=True
         )
@@ -275,6 +388,13 @@ class AdminTest(BaseAcceptanceTest):
         category.name = 'python'
         category.description = 'The Python programming language'
         category.save()
+
+        # Create the tag
+        tag = Tag()
+        tag.name = 'pythonsky'
+        tag.description = 'The Pythonsky programming language'
+        tag.save()
+
         # Create the post
         post = Post()
         post.title = 'My deletable post'
@@ -296,7 +416,7 @@ class AdminTest(BaseAcceptanceTest):
         # Check if deleted successfully
         #print '%s' %response.content
         self.assertTrue('deleted successfully' in response.content)
-        # Check post amended
+        # Check post deleted
         all_posts = Post.objects.all()
         self.assertEquals(len(all_posts), 0)
 
@@ -310,6 +430,13 @@ class PostViewTest(BaseAcceptanceTest):
         category.name = 'python'
         category.description = 'The Python programming language'
         category.save()
+
+        # Create the tag
+        tag = Tag()
+        tag.name = 'pythonsky'
+        tag.description = 'The Pythonsky programming language'
+        tag.save()
+
         # Create the post
         post = Post()
         post.title = 'My first test post for View'
@@ -318,6 +445,7 @@ class PostViewTest(BaseAcceptanceTest):
         post.pub_date = timezone.now()
         post.category = category
         post.save()
+        post.tags.add(tag)
         # Check post saved
         all_posts = Post.objects.all()
         self.assertEquals(len(all_posts), 1)
@@ -328,10 +456,13 @@ class PostViewTest(BaseAcceptanceTest):
         #print "%s" %response
         self.assertTrue(post.title in response.content)
         # Check post text is in response
-        # Check the post category is in the response
-        self.assertTrue(post.category.name in response.content)
         #print "%s" %response
         self.assertTrue(markdown.markdown(post.text) in response.content.decode('utf-8'))
+        # Check the post category is in the response
+        self.assertTrue(post.category.name in response.content)
+        # Check the post tag is in the response
+        post_tag = all_posts[0].tags.all()[0]
+        self.assertTrue(post_tag.name in response.content.decode('utf-8'))
         # Check the post date is in the response
         self.assertTrue(str(post.pub_date.year) in response.content)
         self.assertTrue(post.pub_date.strftime('%b') in response.content)
@@ -349,6 +480,11 @@ class PostViewTest(BaseAcceptanceTest):
         category.name = 'python'
         category.description = 'The Python programming language'
         category.save()
+        # Create the tag
+        tag = Tag()
+        tag.name = 'pythonsky'
+        tag.description = 'The Pythonsky programming language'
+        tag.save()
         # Create the post
         post = Post()
         post.title = 'My first post'
@@ -356,6 +492,8 @@ class PostViewTest(BaseAcceptanceTest):
         post.slug = 'my-first-post'
         post.pub_date = timezone.now()
         post.category = category
+        post.save()
+        post.tags.add(tag)
         post.save()
 
         # Check new post saved
@@ -378,6 +516,10 @@ class PostViewTest(BaseAcceptanceTest):
 
         # Check the post category is in the response
         self.assertTrue(post.category.name in response.content)
+
+        # Check the post category is in the response
+        post_tag = all_posts[0].tags.all()[0]
+        self.assertTrue(post_tag.name in response.content.decode('utf-8'))
 
         # Check post text is in response, will fail with markdown unless UTF8 decode
         #self.assertTrue(post.text in response.content)
@@ -411,38 +553,69 @@ class PostViewTest(BaseAcceptanceTest):
         self.assertEqual(len(all_posts), 1)
         only_post = all_posts[0]
         self.assertEqual(only_post, post)
-
         # Get the category URL
         category_url = post.category.get_absolute_url()
-        #print "%s" %category_url
-
         # Fetch the non-existing category to test view exception
         response = self.client.get("/blog/category/non-existing")
         self.assertEqual(response.status_code, 200)
-
         # Check empty querySet objects.none() - returns "No posts found"
-        self.assertTrue('No posts found' in response.content.decode('utf-8'))
-
+        self.assertTrue('no posts found' in response.content.decode('utf-8'))
         # Fetch the category
         response = self.client.get(category_url)
         self.assertEqual(response.status_code, 200)
-
         # Check the category name is in the response
         self.assertTrue(post.category.name in response.content.decode('utf-8'))
-
         # Check the post text is in the response
         self.assertTrue(markdown.markdown(post.text) in response.content.decode('utf-8'))
-
         # Check the post date is in the response
         self.assertTrue(str(post.pub_date.year) in response.content.decode('utf-8'))
         self.assertTrue(post.pub_date.strftime('%b') in response.content.decode('utf-8'))
         self.assertTrue(str(post.pub_date.day) in response.content.decode('utf-8'))
-
         # Check the link is marked up properly
         self.assertTrue('<a href="http://127.0.0.1:8000/">my first blog post</a>' in response.content.decode('utf-8'))
-
         # Check the correct template was used
         self.assertTemplateUsed(response, 'category_list.html')
+
+    def test_tag_page(self):
+        # Create the tag
+        tag = Tag()
+        tag.name = 'pythonsky'
+        tag.description = 'The Pythonsky programming language'
+        tag.save()
+        # Create the post
+        post = Post()
+        post.title = 'My tagged post'
+        post.text = 'This is [my tagged blog post](http://127.0.0.1:8000/)'
+        post.slug = 'my-tagged-post'
+        post.pub_date = timezone.now()
+        post.save()
+        post.tags.add(tag)
+        # Check new post saved
+        all_posts = Post.objects.all()
+        self.assertEquals(len(all_posts), 1)
+        only_post = all_posts[0]
+        self.assertEquals(only_post, post)
+        # Get the tag URL
+        tag_url = post.tags.all()[0].get_absolute_url()
+        # Fetch the non-existing tag to test view exception
+        response = self.client.get("/blog/tag/non-existing")
+        self.assertEqual(response.status_code, 200)
+        # Check empty querySet objects.none() - returns "No posts found"
+        self.assertTrue('no coresponding posts found' in response.content.decode('utf-8'))
+
+        # Fetch the tag
+        response = self.client.get(tag_url)
+        self.assertEquals(response.status_code, 200)
+        # Check the tag name is in the response
+        self.assertTrue(post.tags.all()[0].name in response.content.decode('utf-8'))
+        # Check the post text is in the response
+        self.assertTrue(markdown.markdown(post.text) in response.content.decode('utf-8'))
+        # Check the post date is in the response
+        self.assertTrue(str(post.pub_date.year) in response.content)
+        self.assertTrue(post.pub_date.strftime('%b') in response.content)
+        self.assertTrue(str(post.pub_date.day) in response.content)
+        # Check the link is marked up properly
+        self.assertTrue('<a href="http://127.0.0.1:8000/">my tagged blog post</a>' in response.content)
 
 # TEST for FLATPAGES Section
 class FlatPageViewTest(BaseAcceptanceTest):
