@@ -218,9 +218,6 @@ ul.social-buttons li a:active {
 @media screen
 and (min-width: 320px)
 and (max-width: 480px) {
-  body {
-      background: url('/static/img/Panorama-iPad.jpg') no-repeat center center fixed;
-  }
   body .intro-text {
       padding-top: 40px;
       padding-bottom: 40px;
@@ -282,9 +279,6 @@ and (max-width: 480px) {
 @media screen
 and (min-width: 480px)
 and (max-width: 768px) {
-  body {
-      background: url('/static/img/Panorama.jpg') no-repeat center center fixed;
-  }
   body .intro-text {
       padding-top: 90px;
       padding-bottom: 45px;
@@ -315,9 +309,6 @@ and (max-width: 768px) {
 @media screen
 and (min-width: 768px)
 and (max-width: 1024px) {
-  body {
-      background: url('/static/img/Panorama.jpg') no-repeat center center fixed;
-  }
   body .intro-text {
       padding-top: 90px;
       padding-bottom: 45px;
