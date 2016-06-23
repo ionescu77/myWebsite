@@ -5,6 +5,8 @@ from django.views.generic import ListView, DetailView
 #from django.utils.safestring import mark_safe
 #import markdown2
 
+from django.contrib.syndication.views import Feed
+
 from blogengine.models import Post, Category, Tag
 
 # Create your views here.
@@ -37,3 +39,14 @@ class PostListView(ListView):
 class DetailView(DetailView):
     model = Post
     template_name = 'post_detail.html'
+
+class PostsFeed(Feed):
+    title = "ionescu77.com RSS feed - posts"
+    link = "blog/feeds/posts/"
+    description = "ionescu77.com RSS feed - blog posts"
+    def items(self):
+        return Post.objects.order_by('-pub_date')
+    def item_title(self, item):
+        return item.title
+    def item_description(self, item):
+        return item.text

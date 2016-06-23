@@ -10,6 +10,7 @@ from django.test import TestCase, LiveServerTestCase, Client
 from django.utils import timezone
 from blogengine.models import Post, Category, Tag
 import markdown2 as markdown
+import feedparser
 
 # Create your tests here.
 class PostTest(TestCase):
@@ -652,3 +653,46 @@ class FlatPageViewTest(BaseAcceptanceTest):
         # Get title and content in the response
         self.assertTrue('About Me' in response.content)
         self.assertTrue('All about me. Well almost ...' in response.content)
+
+# TEST for RSS Feeds
+class FeedTest(BaseAcceptanceTest):
+    def test_all_post_feed(self):
+        # Create the category
+        category = Category()
+        category.name = 'pythonsky'
+        category.description = 'The pythonic programming language'
+        category.save()
+        #Create the tag
+        tag = Tag()
+        tag.name = 'python'
+        tag.description = 'The python programming language'
+        tag.save()
+        # Create a post
+        post = Post()
+        post.title = 'My first post'
+        post.text = 'This is my first blog post'
+        post.slug = 'my-first-post'
+        post.pub_date = timezone.now()
+        post.category = category
+        # Save it
+        post.save()
+        # Add the tag
+        post.tags.add(tag)
+        post.save()
+        # Check we can find it
+        all_posts = Post.objects.all()
+        self.assertEquals(len(all_posts), 1)
+        only_post = all_posts[0]
+        self.assertEquals(only_post, post)
+
+        # Fetch the feed
+        response = self.client.get('/blog/feeds/posts/')
+        self.assertEquals(response.status_code, 200)
+        # Parse the feed
+        feed = feedparser.parse(response.content)
+        # Check length
+        self.assertEquals(len(feed.entries), 1)
+        # Check post retrieved is the correct one
+        feed_post = feed.entries[0]
+        self.assertEquals(feed_post.title, post.title)
+        self.assertEquals(feed_post.description, post.text)
