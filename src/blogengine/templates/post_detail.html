@@ -56,9 +56,9 @@
            *  https://help.disqus.com/customer/en/portal/articles/472098-javascript-configuration-variables
            */
            var disqus_config = function () {
-               this.page.url = {{ post.site }}{{ post.get_absolute_url }};
-               this.page.identifier = {{ post.get_absolute_url }};
-               this.page.title = {{ post.title }};
+               this.page.url = 'http://{{ post.site }}{{ post.get_absolute_url }}';
+               this.page.identifier = '{{ post.get_absolute_url }}';
+               this.page.title = '{{ post.title }}';
            };
           /*
           var disqus_config = function () {
