@@ -25,6 +25,9 @@ DEBUG = False
 
 ALLOWED_HOSTS = []
 
+# Need this for to disable Disqus in Dev and Staging
+# see DISQUS=True/False
+
 
 # Application definition
 
@@ -61,6 +64,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'blogengine.context_processors.disqus',                     # for passing DISQUS variable
+
             ],
         },
     },
