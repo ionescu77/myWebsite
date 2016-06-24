@@ -10,6 +10,7 @@ DATABASES = DATABASES
 
 DEBUG = False
 TEMPLATE_DEBUG = False
+DISQUS = False
 
 ALLOWED_HOSTS = ['ionescu77.avproiect.com']
 

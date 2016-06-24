@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.contrib.sites.models import Site
 
 # Create your models here.
 class Category(models.Model):
@@ -35,6 +36,7 @@ class Post(models.Model):
     pub_date = models.DateTimeField()
     text = models.TextField()
     slug = models.SlugField(max_length=40, unique=True)
+    site = models.ForeignKey(Site)
     category = models.ForeignKey(Category, blank=True, null=True)
     tags = models.ManyToManyField(Tag)
 
