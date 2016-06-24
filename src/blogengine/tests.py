@@ -49,6 +49,12 @@ class PostTest(TestCase):
       self.assertEquals(only_tag.description, 'Pythonsky the programming language')
 
     def test_create_post(self):
+      # Create the site
+      site = Site()
+      site.name = 'test.com'
+      site.domain = 'test.com'
+      site.save()
+
       # Create the category
       category = Category()
       category.name = 'python'
@@ -68,6 +74,7 @@ class PostTest(TestCase):
       post.text = 'This is my test blog post'
       post.slug = 'my-test-post'
       post.pub_date = timezone.now()
+      post.site = site
       post.category = category
       # Save it
       post.save()
@@ -93,6 +100,8 @@ class PostTest(TestCase):
       self.assertEquals(only_post.pub_date.hour, post.pub_date.hour)
       self.assertEquals(only_post.pub_date.minute, post.pub_date.minute)
       self.assertEquals(only_post.pub_date.second, post.pub_date.second)
+      self.assertEquals(only_post.site.name, 'test.com')
+      self.assertEquals(only_post.site.domain, 'test.com')
       self.assertEquals(only_post.category.name, 'python')
       self.assertEquals(only_post.category.description, 'Python the programming language')
 
@@ -105,12 +114,27 @@ class PostTest(TestCase):
       self.assertEquals(only_post_tag.description, 'Pythonsky the programming language')
 
     def test_create_romanian_post(self):
+      # Create the site
+      site = Site()
+      site.name = 'test.com'
+      site.domain = 'test.com'
+      site.save()
+      # Create the tag
+      tag = Tag()
+      tag.name = u'răzvansky'
+      tag.description = u'Răzvan the programming language'
+      tag.save()
+      # Create the post
       post = Post()
       # Set attributes including romanian characters "diacritice"
       post.title = 'Testul cu șțăîâ'
       post.text = 'Ăsta este textul de test cu ăîșțâ'
       post.slug = 'testul-cu-staia'      # testing prepopulated fields in admin is out of scope now. So we pass.
       post.pub_date = timezone.now()
+      post.site = site
+      post.save()
+      # Add the tag only after creating post
+      post.tags.add(tag)
       post.save()
       # Check if we can find it
       all_posts = Post.objects.all()
@@ -129,6 +153,14 @@ class PostTest(TestCase):
       self.assertEquals(only_post.pub_date.hour, post.pub_date.hour)
       self.assertEquals(only_post.pub_date.minute, post.pub_date.minute)
       self.assertEquals(only_post.pub_date.second, post.pub_date.second)
+
+      # Check tags
+      post_tags = only_post.tags.all()
+      self.assertEquals(len(post_tags), 1)
+      only_post_tag = post_tags[0]
+      self.assertEquals(only_post_tag, tag)
+      self.assertEquals(only_post_tag.name, u'răzvansky')
+      self.assertEquals(only_post_tag.description, u'Răzvan the programming language')
 
 class BaseAcceptanceTest(LiveServerTestCase):
     def setUp(self):
@@ -324,6 +356,7 @@ class AdminTest(BaseAcceptanceTest):
             'pub_date_0': '2013-12-28',
             'pub_date_1': '22:00:04',
             'slug': 'my-first-post',
+            'site': '1',
             'category': str(category.pk),
             'tags': str(tag.pk)
         },
@@ -339,6 +372,12 @@ class AdminTest(BaseAcceptanceTest):
         self.assertEquals(len(all_posts), 1)
 
     def test_edit_post(self):
+        # Create the site
+        site = Site()
+        site.name = 'edit.com'
+        site.domain = 'edit.com'
+        site.save()
+
         # Create the category
         category = Category()
         category.name = 'python'
@@ -359,6 +398,7 @@ class AdminTest(BaseAcceptanceTest):
         blogpost.text = 'This is my first editable blog post'
         blogpost.slug = 'my-editable-post'
         blogpost.pub_date = timezone.now()
+        blogpost.site = site
         blogpost.save()
         # Edit the post
         response = self.client.post('/administrare/blogengine/post/' + str(blogpost.pk) + '/', {
@@ -367,6 +407,7 @@ class AdminTest(BaseAcceptanceTest):
             'pub_date_0': '2015-05-28',
             'pub_date_1': '23:00:04',
             'slug': 'my-edited-post',
+            'site': '1',
             'category': str(category.pk),
             'tags': str(tag.pk)
         },
@@ -384,6 +425,12 @@ class AdminTest(BaseAcceptanceTest):
         self.assertEquals(only_post.text, 'This is my EDITED editable blog post')
 
     def test_delete_post(self):
+        # Create the site
+        site = Site()
+        site.name = 'delete.com'
+        site.domain = 'delete.com'
+        site.save()
+
         # Create the category
         category = Category()
         category.name = 'python'
@@ -402,6 +449,7 @@ class AdminTest(BaseAcceptanceTest):
         post.text = 'This is my first deletable post'
         post.slug = 'my-deletable-post'
         post.pub_date = timezone.now()
+        post.site = site
         post.category = category
         post.save()
         # Check new post saved
@@ -426,6 +474,12 @@ class PostViewTest(BaseAcceptanceTest):
         self.client = Client()
 
     def test_index(self):
+        # Create the site
+        site = Site()
+        site.name = 'test.com'
+        site.domain = 'test.com'
+        site.save()
+
         # Create the category
         category = Category()
         category.name = 'python'
@@ -444,6 +498,7 @@ class PostViewTest(BaseAcceptanceTest):
         post.text = 'This the first test post for view. And [markdown blog](http://127.0.0.1:8000/)'
         post.slug = 'my-first-test-post-for-view'
         post.pub_date = timezone.now()
+        post.site = site
         post.category = category
         post.save()
         post.tags.add(tag)
@@ -476,6 +531,11 @@ class PostViewTest(BaseAcceptanceTest):
         self.assertTrue('<a href="http://127.0.0.1:8000/">markdown blog</a>' in response.content)
 
     def test_post_page(self):
+        # Create the site
+        site = Site()
+        site.name = 'test.com'
+        site.domain = 'test.com'
+        site.save()
         # Create the category
         category = Category()
         category.name = 'python'
@@ -492,6 +552,7 @@ class PostViewTest(BaseAcceptanceTest):
         post.text = 'This is [my first blog post](http://127.0.0.1:8000/)'
         post.slug = 'my-first-post'
         post.pub_date = timezone.now()
+        post.site = site
         post.category = category
         post.save()
         post.tags.add(tag)
@@ -535,6 +596,11 @@ class PostViewTest(BaseAcceptanceTest):
         self.assertTrue('<a href="http://127.0.0.1:8000/">my first blog post</a>' in response.content)
 
     def test_category_page(self):
+        # Create the site
+        site = Site()
+        site.name = 'test.com'
+        site.domain = 'test.com'
+        site.save()
         # Create the category
         category = Category()
         category.name = 'python'
@@ -546,6 +612,7 @@ class PostViewTest(BaseAcceptanceTest):
         post.text = 'This is [my first blog post](http://127.0.0.1:8000/)'
         post.slug = 'my-first-post'
         post.pub_date = timezone.now()
+        post.site = site
         post.category = category
         post.save()
 
@@ -578,6 +645,11 @@ class PostViewTest(BaseAcceptanceTest):
         self.assertTemplateUsed(response, 'category_list.html')
 
     def test_tag_page(self):
+        # Create the site
+        site = Site()
+        site.name = 'test.com'
+        site.domain = 'test.com'
+        site.save()
         # Create the tag
         tag = Tag()
         tag.name = 'pythonsky'
@@ -589,6 +661,7 @@ class PostViewTest(BaseAcceptanceTest):
         post.text = 'This is [my tagged blog post](http://127.0.0.1:8000/)'
         post.slug = 'my-tagged-post'
         post.pub_date = timezone.now()
+        post.site = site
         post.save()
         post.tags.add(tag)
         # Check new post saved
@@ -657,6 +730,11 @@ class FlatPageViewTest(BaseAcceptanceTest):
 # TEST for RSS Feeds
 class FeedTest(BaseAcceptanceTest):
     def test_all_post_feed(self):
+        # Create the site
+        site = Site()
+        site.name = 'test.com'
+        site.domain = 'test.com'
+        site.save()
         # Create the category
         category = Category()
         category.name = 'pythonsky'
@@ -673,6 +751,7 @@ class FeedTest(BaseAcceptanceTest):
         post.text = 'This is my first blog post'
         post.slug = 'my-first-post'
         post.pub_date = timezone.now()
+        post.site = site
         post.category = category
         # Save it
         post.save()

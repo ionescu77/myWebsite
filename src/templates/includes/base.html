@@ -151,7 +151,16 @@
                 </div>
               </div><!-- /.blog-sidebar -->
             </div><!-- /.row -->
-        </div>
+
+            {% if DISQUS %}
+            <div class="row">
+              <div class="col-sm-10 blog-comments">
+                {% block comments %}{% endblock %}
+              </div><!-- /.col-sm-10  comments -->
+            </div><!-- /.row -->
+            {% endif %}
+
+        </div><!-- /.container -->
 
         <div class="container footer">
 
