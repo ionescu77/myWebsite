@@ -2,6 +2,7 @@ from django.conf.urls import patterns, url
 from blogengine.models import Post, Category, Tag
 from blogengine.views import PostListView, DetailView, CategoryListView, TagListView, PostsFeed
 
+
 urlpatterns = [
     # Index Blog
     url(r'^(?P<page>\d+)?/?$',
@@ -27,7 +28,7 @@ urlpatterns = [
         model=Tag,
         )),
 
-    # Post RSS feed
+    # Posts RSS feed
     url(r'^feeds/posts/$', PostsFeed()),
 
 ]
