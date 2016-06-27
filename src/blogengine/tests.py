@@ -36,6 +36,18 @@ class CategoryFactory(factory.django.DjangoModelFactory):
     description = 'Python the programming language'
     slug = 'python'
 
+class TagFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Tag
+        django_get_or_create = (
+            'name',
+            'description',
+            'slug'
+        )
+    name = 'pythonsky'
+    description = 'Pythonsky the programming language'
+    slug = 'pythonsky'
+
 # Create your tests here.
 class PostTest(TestCase):
     def test_create_category(self):
@@ -52,12 +64,7 @@ class PostTest(TestCase):
 
     def test_create_tag(self):
       # Create the tag
-      tag = Tag()
-      # Add attributes
-      tag.name = 'pythonsky'
-      tag.description = 'Pythonsky the programming language'
-      # Save it
-      tag.save()
+      tag = TagFactory()
       # Check if we can find it
       all_tags = Tag.objects.all()
       self.assertEquals(len(all_tags), 1)
@@ -75,10 +82,7 @@ class PostTest(TestCase):
       category = CategoryFactory()
 
       # Create the tag
-      tag = Tag()
-      tag.name = 'pythonsky'
-      tag.description = 'Pythonsky the programming language'
-      tag.save()
+      tag = TagFactory()
 
       # Create the post
       post = Post()
@@ -130,10 +134,7 @@ class PostTest(TestCase):
       # Create the site
       site = SiteFactory()
       # Create the tag
-      tag = Tag()
-      tag.name = u'răzvansky'
-      tag.description = u'Răzvan the programming language'
-      tag.save()
+      tag = TagFactory(name = u'răzvansky', description = u'Răzvan the programming language', slug = 'razvansky')
       # Create the post
       post = Post()
       # Set attributes including romanian characters "diacritice"
@@ -171,6 +172,7 @@ class PostTest(TestCase):
       self.assertEquals(only_post_tag, tag)
       self.assertEquals(only_post_tag.name, u'răzvansky')
       self.assertEquals(only_post_tag.description, u'Răzvan the programming language')
+      self.assertEquals(only_post_tag.slug, u'razvansky')
 
 class BaseAcceptanceTest(LiveServerTestCase):
     def setUp(self):
@@ -292,10 +294,7 @@ class AdminTest(BaseAcceptanceTest):
         self.assertEquals(len(all_tags), 1)
     def test_edit_tag(self):
         # Create the tag
-        tag = Tag()
-        tag.name = 'pythonsky'
-        tag.description = 'The Pythonsky programming language'
-        tag.save()
+        tag = TagFactory()
         # Log in
         self.client.login(username='testuser', password='test')
         # Edit the tag
@@ -314,10 +313,7 @@ class AdminTest(BaseAcceptanceTest):
         self.assertEquals(only_tag.description, 'The Perlsky programming language')
     def test_delete_tag(self):
         # Create the tag
-        tag = Tag()
-        tag.name = 'python'
-        tag.description = 'The Python programming language'
-        tag.save()
+        tag = TagFactory()
         # Log in
         self.client.login(username='testuser', password='test')
         # Delete the tag
@@ -337,10 +333,7 @@ class AdminTest(BaseAcceptanceTest):
         category = CategoryFactory()
 
         # Create the tag
-        tag = Tag()
-        tag.name = 'pythonsky'
-        tag.description = 'The Pythonsky programming language'
-        tag.save()
+        tag = TagFactory()
 
         # Log in
         self.client.login(username='testuser', password='test')
@@ -380,10 +373,7 @@ class AdminTest(BaseAcceptanceTest):
         category = CategoryFactory()
 
         # Create the tag
-        tag = Tag()
-        tag.name = 'pythonsky'
-        tag.description = 'The Pythonsky programming language'
-        tag.save()
+        tag = TagFactory()
 
         # Log in
         self.client.login(username='testuser', password='test')
@@ -427,10 +417,7 @@ class AdminTest(BaseAcceptanceTest):
         category = CategoryFactory()
 
         # Create the tag
-        tag = Tag()
-        tag.name = 'pythonsky'
-        tag.description = 'The Pythonsky programming language'
-        tag.save()
+        tag = TagFactory()
 
         # Create the post
         post = Post()
@@ -470,10 +457,7 @@ class PostViewTest(BaseAcceptanceTest):
         category = CategoryFactory()
 
         # Create the tag
-        tag = Tag()
-        tag.name = 'pythonsky'
-        tag.description = 'The Pythonsky programming language'
-        tag.save()
+        tag = TagFactory()
 
         # Create the post
         post = Post()
@@ -519,10 +503,7 @@ class PostViewTest(BaseAcceptanceTest):
         # Create the category
         category = CategoryFactory()
         # Create the tag
-        tag = Tag()
-        tag.name = 'pythonsky'
-        tag.description = 'The Pythonsky programming language'
-        tag.save()
+        tag = TagFactory()
         # Create the post
         post = Post()
         post.title = 'My first post'
@@ -619,10 +600,7 @@ class PostViewTest(BaseAcceptanceTest):
         # Create the site
         site = SiteFactory()
         # Create the tag
-        tag = Tag()
-        tag.name = 'pythonsky'
-        tag.description = 'The Pythonsky programming language'
-        tag.save()
+        tag = TagFactory()
         # Create the post
         post = Post()
         post.title = 'My tagged post'
@@ -703,10 +681,7 @@ class FeedTest(BaseAcceptanceTest):
         # Create the category
         category = CategoryFactory()
         #Create the tag
-        tag = Tag()
-        tag.name = 'python'
-        tag.description = 'The python programming language'
-        tag.save()
+        tag = TagFactory()
         # Create a post
         post = Post()
         post.title = 'My first post'
