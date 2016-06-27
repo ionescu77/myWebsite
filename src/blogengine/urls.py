@@ -2,13 +2,6 @@ from django.conf.urls import patterns, url
 from blogengine.models import Post, Category, Tag
 from blogengine.views import PostListView, DetailView, CategoryListView, TagListView, PostsFeed
 
-from django.contrib.sitemaps.views import sitemap
-from blogengine.sitemap import PostSitemap, FlatpageSitemap
-
-sitemaps = {
-    'posts': PostSitemap,
-    'pages': FlatpageSitemap
-}
 
 urlpatterns = [
     # Index Blog
@@ -37,8 +30,5 @@ urlpatterns = [
 
     # Posts RSS feed
     url(r'^feeds/posts/$', PostsFeed()),
-
-    # Create sitemaps.xml
-    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 
 ]
