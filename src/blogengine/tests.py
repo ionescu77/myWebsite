@@ -775,3 +775,17 @@ class FeedTest(BaseAcceptanceTest):
         feed_post = feed.entries[0]
         self.assertEquals(feed_post.title, post.title)
         self.assertEquals(feed_post.description, post.text)
+
+# TEST for sitemap.xml
+def SiteMapTest(BaseAcceptanceTest):
+    # Create a post
+    post = PostFactory()
+    # Create a flat page
+    page = FlatPageFactory()
+    # Get sitemap
+    response = self.client.get('/sitemap.xml')
+    self.assertEquals(response.status_code, 200)
+    # Check post is present in sitemap
+    self.assertTrue('my-first-post' in response.content)
+    # Check page is present in sitemap
+    self.assertTrue('/about/' in response.content)
