@@ -24,16 +24,23 @@ class SiteFactory(factory.django.DjangoModelFactory):
     name = 'test.com'
     domain = 'test.com'
 
+class CategoryFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Category
+        django_get_or_create = (
+            'name',
+            'description',
+            'slug'
+        )
+    name = 'python'
+    description = 'Python the programming language'
+    slug = 'python'
+
 # Create your tests here.
 class PostTest(TestCase):
     def test_create_category(self):
       # Create the category
-      category = Category()
-      # Add attributes
-      category.name = 'python'
-      category.description = 'Python the programming language'
-      # Save it
-      category.save()
+      category = CategoryFactory()
       # Check if we can find it
       all_categories = Category.objects.all()
       self.assertEquals(len(all_categories), 1)
@@ -65,10 +72,7 @@ class PostTest(TestCase):
       site = SiteFactory()
 
       # Create the category
-      category = Category()
-      category.name = 'python'
-      category.description = 'Python the programming language'
-      category.save()
+      category = CategoryFactory()
 
       # Create the tag
       tag = Tag()
@@ -234,10 +238,7 @@ class AdminTest(BaseAcceptanceTest):
         self.assertEquals(len(all_categories), 1)
     def test_edit_category(self):
         # Create the category
-        category = Category()
-        category.name = 'python'
-        category.description = 'The Python programming language'
-        category.save()
+        category = CategoryFactory()
         # Log in
         self.client.login(username='testuser', password="test")
         # Edit the category
@@ -256,10 +257,7 @@ class AdminTest(BaseAcceptanceTest):
         self.assertEquals(only_category.description, 'The Perl programming language')
     def test_delete_category(self):
         # Create the category
-        category = Category()
-        category.name = 'python'
-        category.description = 'The Python programming language'
-        category.save()
+        category = CategoryFactory()
         # Log in
         self.client.login(username='testuser', password="test")
         # Delete the category
@@ -336,10 +334,7 @@ class AdminTest(BaseAcceptanceTest):
 
     def test_create_admin_post(self):
         # Create the category
-        category = Category()
-        category.name = 'python'
-        category.description = 'The Python programming language'
-        category.save()
+        category = CategoryFactory()
 
         # Create the tag
         tag = Tag()
@@ -382,10 +377,7 @@ class AdminTest(BaseAcceptanceTest):
         site = SiteFactory()
 
         # Create the category
-        category = Category()
-        category.name = 'python'
-        category.description = 'The Python programming language'
-        category.save()
+        category = CategoryFactory()
 
         # Create the tag
         tag = Tag()
@@ -432,10 +424,7 @@ class AdminTest(BaseAcceptanceTest):
         site = SiteFactory()
 
         # Create the category
-        category = Category()
-        category.name = 'python'
-        category.description = 'The Python programming language'
-        category.save()
+        category = CategoryFactory()
 
         # Create the tag
         tag = Tag()
@@ -478,10 +467,7 @@ class PostViewTest(BaseAcceptanceTest):
         site = SiteFactory()
 
         # Create the category
-        category = Category()
-        category.name = 'python'
-        category.description = 'The Python programming language'
-        category.save()
+        category = CategoryFactory()
 
         # Create the tag
         tag = Tag()
@@ -531,10 +517,7 @@ class PostViewTest(BaseAcceptanceTest):
         # Create the site
         site = SiteFactory()
         # Create the category
-        category = Category()
-        category.name = 'python'
-        category.description = 'The Python programming language'
-        category.save()
+        category = CategoryFactory()
         # Create the tag
         tag = Tag()
         tag.name = 'pythonsky'
@@ -593,10 +576,7 @@ class PostViewTest(BaseAcceptanceTest):
         # Create the site
         site = SiteFactory()
         # Create the category
-        category = Category()
-        category.name = 'python'
-        category.description = 'The Python programming language'
-        category.save()
+        category = CategoryFactory()
         # Create the post
         post = Post()
         post.title = 'My first post'
@@ -721,10 +701,7 @@ class FeedTest(BaseAcceptanceTest):
         # Create the site
         site = SiteFactory()
         # Create the category
-        category = Category()
-        category.name = 'pythonsky'
-        category.description = 'The pythonic programming language'
-        category.save()
+        category = CategoryFactory()
         #Create the tag
         tag = Tag()
         tag.name = 'python'

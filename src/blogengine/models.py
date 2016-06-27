@@ -7,10 +7,10 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     slug = models.SlugField(max_length=40, unique=True, blank=True, null=True)
-    def save(self):
+    def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(unicode(self.name))
-        super(Category, self).save()
+        super(Category, self).save(*args, **kwargs)
     def get_absolute_url(self):
         return "/blog/category/%s/" % (self.slug)
     def __unicode__(self):
