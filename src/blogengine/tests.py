@@ -60,6 +60,22 @@ class FlatPageFactory(factory.django.DjangoModelFactory):
     title = 'About Me'
     content = 'All about me. Well almost ...'
 
+class PostFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Post
+        django_get_or_create = (
+            'title',
+            'text',
+            'slug',
+            'pub_date'
+        )
+    title = 'My test post'
+    text = 'This is my test blog post'
+    slug = 'my-test-post'
+    pub_date = timezone.now()
+    site = factory.SubFactory(SiteFactory)
+    category = factory.SubFactory(CategoryFactory)
+
 # Create your tests here.
 class PostTest(TestCase):
     def test_create_category(self):
@@ -97,20 +113,10 @@ class PostTest(TestCase):
       tag = TagFactory()
 
       # Create the post
-      post = Post()
-      # Set the attributes
-      post.title = 'My test post'
-      post.text = 'This is my test blog post'
-      post.slug = 'my-test-post'
-      post.pub_date = timezone.now()
-      post.site = site
-      post.category = category
-      # Save it
-      post.save()
+      post = PostFactory()
 
       # Add the tag only after creating post
       post.tags.add(tag)
-      post.save()
 
       # Check if we can find it
       all_posts = Post.objects.all()
@@ -147,15 +153,8 @@ class PostTest(TestCase):
       site = SiteFactory()
       # Create the tag
       tag = TagFactory(name = u'răzvansky', description = u'Răzvan the programming language', slug = 'razvansky')
-      # Create the post
-      post = Post()
-      # Set attributes including romanian characters "diacritice"
-      post.title = 'Testul cu șțăîâ'
-      post.text = 'Ăsta este textul de test cu ăîșțâ'
-      post.slug = 'testul-cu-staia'      # testing prepopulated fields in admin is out of scope now. So we pass.
-      post.pub_date = timezone.now()
-      post.site = site
-      post.save()
+      # Create the post & Set attributes including romanian characters "diacritice"
+      post = PostFactory(title = 'Testul cu șțăîâ', text = 'Ăsta este textul de test cu ăîșțâ', slug = 'testul-cu-staia')
       # Add the tag only after creating post
       post.tags.add(tag)
       post.save()
@@ -390,13 +389,7 @@ class AdminTest(BaseAcceptanceTest):
         # Log in
         self.client.login(username='testuser', password='test')
         # Create the post
-        blogpost = Post()
-        blogpost.title = 'My editable post'
-        blogpost.text = 'This is my first editable blog post'
-        blogpost.slug = 'my-editable-post'
-        blogpost.pub_date = timezone.now()
-        blogpost.site = site
-        blogpost.save()
+        blogpost = PostFactory()
         # Edit the post
         response = self.client.post('/administrare/blogengine/post/' + str(blogpost.pk) + '/', {
             'title': 'My EDITED post',
@@ -422,24 +415,16 @@ class AdminTest(BaseAcceptanceTest):
         self.assertEquals(only_post.text, 'This is my EDITED editable blog post')
 
     def test_delete_post(self):
+        # Create the post
+        post = PostFactory()
         # Create the site
         site = SiteFactory()
-
         # Create the category
         category = CategoryFactory()
-
         # Create the tag
         tag = TagFactory()
+        post.tags.add(tag)
 
-        # Create the post
-        post = Post()
-        post.title = 'My deletable post'
-        post.text = 'This is my first deletable post'
-        post.slug = 'my-deletable-post'
-        post.pub_date = timezone.now()
-        post.site = site
-        post.category = category
-        post.save()
         # Check new post saved
         all_posts = Post.objects.all()
         self.assertEquals(len(all_posts), 1)
@@ -464,22 +449,12 @@ class PostViewTest(BaseAcceptanceTest):
     def test_index(self):
         # Create the site
         site = SiteFactory()
-
         # Create the category
         category = CategoryFactory()
-
         # Create the tag
         tag = TagFactory()
-
         # Create the post
-        post = Post()
-        post.title = 'My first test post for View'
-        post.text = 'This the first test post for view. And [markdown blog](http://127.0.0.1:8000/)'
-        post.slug = 'my-first-test-post-for-view'
-        post.pub_date = timezone.now()
-        post.site = site
-        post.category = category
-        post.save()
+        post = PostFactory(title = 'My first test post for View', text = 'This the first test post for view. And [markdown blog](http://127.0.0.1:8000/)', slug = 'my-first-test-post-for-view')
         post.tags.add(tag)
         # Check post saved
         all_posts = Post.objects.all()
@@ -494,7 +469,7 @@ class PostViewTest(BaseAcceptanceTest):
         #print "%s" %response
         self.assertTrue(markdown.markdown(post.text) in response.content.decode('utf-8'))
         # Check the post category is in the response
-        self.assertTrue(post.category.name in response.content)
+        self.assertTrue(post.category.name in response.content.decode('utf-8'))
         # Check the post tag is in the response
         post_tag = all_posts[0].tags.all()[0]
         self.assertTrue(post_tag.name in response.content.decode('utf-8'))
@@ -517,16 +492,8 @@ class PostViewTest(BaseAcceptanceTest):
         # Create the tag
         tag = TagFactory()
         # Create the post
-        post = Post()
-        post.title = 'My first post'
-        post.text = 'This is [my first blog post](http://127.0.0.1:8000/)'
-        post.slug = 'my-first-post'
-        post.pub_date = timezone.now()
-        post.site = site
-        post.category = category
-        post.save()
+        post = PostFactory(text = 'This is [my first blog post](http://127.0.0.1:8000/)')
         post.tags.add(tag)
-        post.save()
 
         # Check new post saved
         all_posts = Post.objects.all()
@@ -547,7 +514,7 @@ class PostViewTest(BaseAcceptanceTest):
         self.assertTrue(post.title in response.content)
 
         # Check the post category is in the response
-        self.assertTrue(post.category.name in response.content)
+        self.assertTrue(post.category.name in response.content.decode('utf-8'))
 
         # Check the post category is in the response
         post_tag = all_posts[0].tags.all()[0]
@@ -571,14 +538,7 @@ class PostViewTest(BaseAcceptanceTest):
         # Create the category
         category = CategoryFactory()
         # Create the post
-        post = Post()
-        post.title = 'My first post'
-        post.text = 'This is [my first blog post](http://127.0.0.1:8000/)'
-        post.slug = 'my-first-post'
-        post.pub_date = timezone.now()
-        post.site = site
-        post.category = category
-        post.save()
+        post = PostFactory(text = 'This is [my first blog post](http://127.0.0.1:8000/)')
 
         # Check new post saved
         all_posts = Post.objects.all()
@@ -614,13 +574,7 @@ class PostViewTest(BaseAcceptanceTest):
         # Create the tag
         tag = TagFactory()
         # Create the post
-        post = Post()
-        post.title = 'My tagged post'
-        post.text = 'This is [my tagged blog post](http://127.0.0.1:8000/)'
-        post.slug = 'my-tagged-post'
-        post.pub_date = timezone.now()
-        post.site = site
-        post.save()
+        post = PostFactory(text = 'This is [my tagged blog post](http://127.0.0.1:8000/)')
         post.tags.add(tag)
         # Check new post saved
         all_posts = Post.objects.all()
@@ -691,18 +645,9 @@ class FeedTest(BaseAcceptanceTest):
         #Create the tag
         tag = TagFactory()
         # Create a post
-        post = Post()
-        post.title = 'My first post'
-        post.text = 'This is my first blog post'
-        post.slug = 'my-first-post'
-        post.pub_date = timezone.now()
-        post.site = site
-        post.category = category
-        # Save it
-        post.save()
+        post = PostFactory()
         # Add the tag
         post.tags.add(tag)
-        post.save()
         # Check we can find it
         all_posts = Post.objects.all()
         self.assertEquals(len(all_posts), 1)
