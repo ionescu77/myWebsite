@@ -11,6 +11,18 @@ from django.utils import timezone
 from blogengine.models import Post, Category, Tag
 import markdown2 as markdown
 import feedparser
+import factory.django
+
+# Factories
+class SiteFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Site
+        django_get_or_create = (
+            'name',
+            'domain'
+        )
+    name = 'test.com'
+    domain = 'test.com'
 
 # Create your tests here.
 class PostTest(TestCase):
@@ -50,10 +62,7 @@ class PostTest(TestCase):
 
     def test_create_post(self):
       # Create the site
-      site = Site()
-      site.name = 'test.com'
-      site.domain = 'test.com'
-      site.save()
+      site = SiteFactory()
 
       # Create the category
       category = Category()
@@ -115,10 +124,7 @@ class PostTest(TestCase):
 
     def test_create_romanian_post(self):
       # Create the site
-      site = Site()
-      site.name = 'test.com'
-      site.domain = 'test.com'
-      site.save()
+      site = SiteFactory()
       # Create the tag
       tag = Tag()
       tag.name = u'răzvansky'
@@ -373,10 +379,7 @@ class AdminTest(BaseAcceptanceTest):
 
     def test_edit_post(self):
         # Create the site
-        site = Site()
-        site.name = 'edit.com'
-        site.domain = 'edit.com'
-        site.save()
+        site = SiteFactory()
 
         # Create the category
         category = Category()
@@ -426,10 +429,7 @@ class AdminTest(BaseAcceptanceTest):
 
     def test_delete_post(self):
         # Create the site
-        site = Site()
-        site.name = 'delete.com'
-        site.domain = 'delete.com'
-        site.save()
+        site = SiteFactory()
 
         # Create the category
         category = Category()
@@ -475,10 +475,7 @@ class PostViewTest(BaseAcceptanceTest):
 
     def test_index(self):
         # Create the site
-        site = Site()
-        site.name = 'test.com'
-        site.domain = 'test.com'
-        site.save()
+        site = SiteFactory()
 
         # Create the category
         category = Category()
@@ -532,10 +529,7 @@ class PostViewTest(BaseAcceptanceTest):
 
     def test_post_page(self):
         # Create the site
-        site = Site()
-        site.name = 'test.com'
-        site.domain = 'test.com'
-        site.save()
+        site = SiteFactory()
         # Create the category
         category = Category()
         category.name = 'python'
@@ -597,10 +591,7 @@ class PostViewTest(BaseAcceptanceTest):
 
     def test_category_page(self):
         # Create the site
-        site = Site()
-        site.name = 'test.com'
-        site.domain = 'test.com'
-        site.save()
+        site = SiteFactory()
         # Create the category
         category = Category()
         category.name = 'python'
@@ -646,10 +637,7 @@ class PostViewTest(BaseAcceptanceTest):
 
     def test_tag_page(self):
         # Create the site
-        site = Site()
-        site.name = 'test.com'
-        site.domain = 'test.com'
-        site.save()
+        site = SiteFactory()
         # Create the tag
         tag = Tag()
         tag.name = 'pythonsky'
@@ -731,10 +719,7 @@ class FlatPageViewTest(BaseAcceptanceTest):
 class FeedTest(BaseAcceptanceTest):
     def test_all_post_feed(self):
         # Create the site
-        site = Site()
-        site.name = 'test.com'
-        site.domain = 'test.com'
-        site.save()
+        site = SiteFactory()
         # Create the category
         category = Category()
         category.name = 'pythonsky'
