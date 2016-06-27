@@ -11,17 +11,76 @@ from django.utils import timezone
 from blogengine.models import Post, Category, Tag
 import markdown2 as markdown
 import feedparser
+import factory.django
+
+# Factories
+class SiteFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Site
+        django_get_or_create = (
+            'name',
+            'domain'
+        )
+    name = 'test.com'
+    domain = 'test.com'
+
+class CategoryFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Category
+        django_get_or_create = (
+            'name',
+            'description',
+            'slug'
+        )
+    name = 'python'
+    description = 'Python the programming language'
+    slug = 'python'
+
+class TagFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Tag
+        django_get_or_create = (
+            'name',
+            'description',
+            'slug'
+        )
+    name = 'pythonsky'
+    description = 'Pythonsky the programming language'
+    slug = 'pythonsky'
+
+class FlatPageFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = FlatPage
+        django_get_or_create = (
+            'url',
+            'title',
+            'content'
+        )
+    url = '/about/'
+    title = 'About Me'
+    content = 'All about me. Well almost ...'
+
+class PostFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Post
+        django_get_or_create = (
+            'title',
+            'text',
+            'slug',
+            'pub_date'
+        )
+    title = 'My test post'
+    text = 'This is my test blog post'
+    slug = 'my-test-post'
+    pub_date = timezone.now()
+    site = factory.SubFactory(SiteFactory)
+    category = factory.SubFactory(CategoryFactory)
 
 # Create your tests here.
 class PostTest(TestCase):
     def test_create_category(self):
       # Create the category
-      category = Category()
-      # Add attributes
-      category.name = 'python'
-      category.description = 'Python the programming language'
-      # Save it
-      category.save()
+      category = CategoryFactory()
       # Check if we can find it
       all_categories = Category.objects.all()
       self.assertEquals(len(all_categories), 1)
@@ -33,12 +92,7 @@ class PostTest(TestCase):
 
     def test_create_tag(self):
       # Create the tag
-      tag = Tag()
-      # Add attributes
-      tag.name = 'pythonsky'
-      tag.description = 'Pythonsky the programming language'
-      # Save it
-      tag.save()
+      tag = TagFactory()
       # Check if we can find it
       all_tags = Tag.objects.all()
       self.assertEquals(len(all_tags), 1)
@@ -50,38 +104,19 @@ class PostTest(TestCase):
 
     def test_create_post(self):
       # Create the site
-      site = Site()
-      site.name = 'test.com'
-      site.domain = 'test.com'
-      site.save()
+      site = SiteFactory()
 
       # Create the category
-      category = Category()
-      category.name = 'python'
-      category.description = 'Python the programming language'
-      category.save()
+      category = CategoryFactory()
 
       # Create the tag
-      tag = Tag()
-      tag.name = 'pythonsky'
-      tag.description = 'Pythonsky the programming language'
-      tag.save()
+      tag = TagFactory()
 
       # Create the post
-      post = Post()
-      # Set the attributes
-      post.title = 'My test post'
-      post.text = 'This is my test blog post'
-      post.slug = 'my-test-post'
-      post.pub_date = timezone.now()
-      post.site = site
-      post.category = category
-      # Save it
-      post.save()
+      post = PostFactory()
 
       # Add the tag only after creating post
       post.tags.add(tag)
-      post.save()
 
       # Check if we can find it
       all_posts = Post.objects.all()
@@ -115,24 +150,11 @@ class PostTest(TestCase):
 
     def test_create_romanian_post(self):
       # Create the site
-      site = Site()
-      site.name = 'test.com'
-      site.domain = 'test.com'
-      site.save()
+      site = SiteFactory()
       # Create the tag
-      tag = Tag()
-      tag.name = u'răzvansky'
-      tag.description = u'Răzvan the programming language'
-      tag.save()
-      # Create the post
-      post = Post()
-      # Set attributes including romanian characters "diacritice"
-      post.title = 'Testul cu șțăîâ'
-      post.text = 'Ăsta este textul de test cu ăîșțâ'
-      post.slug = 'testul-cu-staia'      # testing prepopulated fields in admin is out of scope now. So we pass.
-      post.pub_date = timezone.now()
-      post.site = site
-      post.save()
+      tag = TagFactory(name = u'răzvansky', description = u'Răzvan the programming language', slug = 'razvansky')
+      # Create the post & Set attributes including romanian characters "diacritice"
+      post = PostFactory(title = 'Testul cu șțăîâ', text = 'Ăsta este textul de test cu ăîșțâ', slug = 'testul-cu-staia')
       # Add the tag only after creating post
       post.tags.add(tag)
       post.save()
@@ -161,6 +183,7 @@ class PostTest(TestCase):
       self.assertEquals(only_post_tag, tag)
       self.assertEquals(only_post_tag.name, u'răzvansky')
       self.assertEquals(only_post_tag.description, u'Răzvan the programming language')
+      self.assertEquals(only_post_tag.slug, u'razvansky')
 
 class BaseAcceptanceTest(LiveServerTestCase):
     def setUp(self):
@@ -228,10 +251,7 @@ class AdminTest(BaseAcceptanceTest):
         self.assertEquals(len(all_categories), 1)
     def test_edit_category(self):
         # Create the category
-        category = Category()
-        category.name = 'python'
-        category.description = 'The Python programming language'
-        category.save()
+        category = CategoryFactory()
         # Log in
         self.client.login(username='testuser', password="test")
         # Edit the category
@@ -250,10 +270,7 @@ class AdminTest(BaseAcceptanceTest):
         self.assertEquals(only_category.description, 'The Perl programming language')
     def test_delete_category(self):
         # Create the category
-        category = Category()
-        category.name = 'python'
-        category.description = 'The Python programming language'
-        category.save()
+        category = CategoryFactory()
         # Log in
         self.client.login(username='testuser', password="test")
         # Delete the category
@@ -288,10 +305,7 @@ class AdminTest(BaseAcceptanceTest):
         self.assertEquals(len(all_tags), 1)
     def test_edit_tag(self):
         # Create the tag
-        tag = Tag()
-        tag.name = 'pythonsky'
-        tag.description = 'The Pythonsky programming language'
-        tag.save()
+        tag = TagFactory()
         # Log in
         self.client.login(username='testuser', password='test')
         # Edit the tag
@@ -310,10 +324,7 @@ class AdminTest(BaseAcceptanceTest):
         self.assertEquals(only_tag.description, 'The Perlsky programming language')
     def test_delete_tag(self):
         # Create the tag
-        tag = Tag()
-        tag.name = 'python'
-        tag.description = 'The Python programming language'
-        tag.save()
+        tag = TagFactory()
         # Log in
         self.client.login(username='testuser', password='test')
         # Delete the tag
@@ -330,16 +341,10 @@ class AdminTest(BaseAcceptanceTest):
 
     def test_create_admin_post(self):
         # Create the category
-        category = Category()
-        category.name = 'python'
-        category.description = 'The Python programming language'
-        category.save()
+        category = CategoryFactory()
 
         # Create the tag
-        tag = Tag()
-        tag.name = 'pythonsky'
-        tag.description = 'The Pythonsky programming language'
-        tag.save()
+        tag = TagFactory()
 
         # Log in
         self.client.login(username='testuser', password='test')
@@ -373,33 +378,18 @@ class AdminTest(BaseAcceptanceTest):
 
     def test_edit_post(self):
         # Create the site
-        site = Site()
-        site.name = 'edit.com'
-        site.domain = 'edit.com'
-        site.save()
+        site = SiteFactory()
 
         # Create the category
-        category = Category()
-        category.name = 'python'
-        category.description = 'The Python programming language'
-        category.save()
+        category = CategoryFactory()
 
         # Create the tag
-        tag = Tag()
-        tag.name = 'pythonsky'
-        tag.description = 'The Pythonsky programming language'
-        tag.save()
+        tag = TagFactory()
 
         # Log in
         self.client.login(username='testuser', password='test')
         # Create the post
-        blogpost = Post()
-        blogpost.title = 'My editable post'
-        blogpost.text = 'This is my first editable blog post'
-        blogpost.slug = 'my-editable-post'
-        blogpost.pub_date = timezone.now()
-        blogpost.site = site
-        blogpost.save()
+        blogpost = PostFactory()
         # Edit the post
         response = self.client.post('/administrare/blogengine/post/' + str(blogpost.pk) + '/', {
             'title': 'My EDITED post',
@@ -425,33 +415,16 @@ class AdminTest(BaseAcceptanceTest):
         self.assertEquals(only_post.text, 'This is my EDITED editable blog post')
 
     def test_delete_post(self):
-        # Create the site
-        site = Site()
-        site.name = 'delete.com'
-        site.domain = 'delete.com'
-        site.save()
-
-        # Create the category
-        category = Category()
-        category.name = 'python'
-        category.description = 'The Python programming language'
-        category.save()
-
-        # Create the tag
-        tag = Tag()
-        tag.name = 'pythonsky'
-        tag.description = 'The Pythonsky programming language'
-        tag.save()
-
         # Create the post
-        post = Post()
-        post.title = 'My deletable post'
-        post.text = 'This is my first deletable post'
-        post.slug = 'my-deletable-post'
-        post.pub_date = timezone.now()
-        post.site = site
-        post.category = category
-        post.save()
+        post = PostFactory()
+        # Create the site
+        site = SiteFactory()
+        # Create the category
+        category = CategoryFactory()
+        # Create the tag
+        tag = TagFactory()
+        post.tags.add(tag)
+
         # Check new post saved
         all_posts = Post.objects.all()
         self.assertEquals(len(all_posts), 1)
@@ -475,32 +448,13 @@ class PostViewTest(BaseAcceptanceTest):
 
     def test_index(self):
         # Create the site
-        site = Site()
-        site.name = 'test.com'
-        site.domain = 'test.com'
-        site.save()
-
+        site = SiteFactory()
         # Create the category
-        category = Category()
-        category.name = 'python'
-        category.description = 'The Python programming language'
-        category.save()
-
+        category = CategoryFactory()
         # Create the tag
-        tag = Tag()
-        tag.name = 'pythonsky'
-        tag.description = 'The Pythonsky programming language'
-        tag.save()
-
+        tag = TagFactory()
         # Create the post
-        post = Post()
-        post.title = 'My first test post for View'
-        post.text = 'This the first test post for view. And [markdown blog](http://127.0.0.1:8000/)'
-        post.slug = 'my-first-test-post-for-view'
-        post.pub_date = timezone.now()
-        post.site = site
-        post.category = category
-        post.save()
+        post = PostFactory(title = 'My first test post for View', text = 'This the first test post for view. And [markdown blog](http://127.0.0.1:8000/)', slug = 'my-first-test-post-for-view')
         post.tags.add(tag)
         # Check post saved
         all_posts = Post.objects.all()
@@ -515,7 +469,7 @@ class PostViewTest(BaseAcceptanceTest):
         #print "%s" %response
         self.assertTrue(markdown.markdown(post.text) in response.content.decode('utf-8'))
         # Check the post category is in the response
-        self.assertTrue(post.category.name in response.content)
+        self.assertTrue(post.category.name in response.content.decode('utf-8'))
         # Check the post tag is in the response
         post_tag = all_posts[0].tags.all()[0]
         self.assertTrue(post_tag.name in response.content.decode('utf-8'))
@@ -532,31 +486,14 @@ class PostViewTest(BaseAcceptanceTest):
 
     def test_post_page(self):
         # Create the site
-        site = Site()
-        site.name = 'test.com'
-        site.domain = 'test.com'
-        site.save()
+        site = SiteFactory()
         # Create the category
-        category = Category()
-        category.name = 'python'
-        category.description = 'The Python programming language'
-        category.save()
+        category = CategoryFactory()
         # Create the tag
-        tag = Tag()
-        tag.name = 'pythonsky'
-        tag.description = 'The Pythonsky programming language'
-        tag.save()
+        tag = TagFactory()
         # Create the post
-        post = Post()
-        post.title = 'My first post'
-        post.text = 'This is [my first blog post](http://127.0.0.1:8000/)'
-        post.slug = 'my-first-post'
-        post.pub_date = timezone.now()
-        post.site = site
-        post.category = category
-        post.save()
+        post = PostFactory(text = 'This is [my first blog post](http://127.0.0.1:8000/)')
         post.tags.add(tag)
-        post.save()
 
         # Check new post saved
         all_posts = Post.objects.all()
@@ -577,7 +514,7 @@ class PostViewTest(BaseAcceptanceTest):
         self.assertTrue(post.title in response.content)
 
         # Check the post category is in the response
-        self.assertTrue(post.category.name in response.content)
+        self.assertTrue(post.category.name in response.content.decode('utf-8'))
 
         # Check the post category is in the response
         post_tag = all_posts[0].tags.all()[0]
@@ -597,24 +534,11 @@ class PostViewTest(BaseAcceptanceTest):
 
     def test_category_page(self):
         # Create the site
-        site = Site()
-        site.name = 'test.com'
-        site.domain = 'test.com'
-        site.save()
+        site = SiteFactory()
         # Create the category
-        category = Category()
-        category.name = 'python'
-        category.description = 'The Python programming language'
-        category.save()
+        category = CategoryFactory()
         # Create the post
-        post = Post()
-        post.title = 'My first post'
-        post.text = 'This is [my first blog post](http://127.0.0.1:8000/)'
-        post.slug = 'my-first-post'
-        post.pub_date = timezone.now()
-        post.site = site
-        post.category = category
-        post.save()
+        post = PostFactory(text = 'This is [my first blog post](http://127.0.0.1:8000/)')
 
         # Check new post saved
         all_posts = Post.objects.all()
@@ -646,23 +570,11 @@ class PostViewTest(BaseAcceptanceTest):
 
     def test_tag_page(self):
         # Create the site
-        site = Site()
-        site.name = 'test.com'
-        site.domain = 'test.com'
-        site.save()
+        site = SiteFactory()
         # Create the tag
-        tag = Tag()
-        tag.name = 'pythonsky'
-        tag.description = 'The Pythonsky programming language'
-        tag.save()
+        tag = TagFactory()
         # Create the post
-        post = Post()
-        post.title = 'My tagged post'
-        post.text = 'This is [my tagged blog post](http://127.0.0.1:8000/)'
-        post.slug = 'my-tagged-post'
-        post.pub_date = timezone.now()
-        post.site = site
-        post.save()
+        post = PostFactory(text = 'This is [my tagged blog post](http://127.0.0.1:8000/)')
         post.tags.add(tag)
         # Check new post saved
         all_posts = Post.objects.all()
@@ -695,11 +607,7 @@ class PostViewTest(BaseAcceptanceTest):
 class FlatPageViewTest(BaseAcceptanceTest):
     def test_create_flatpage(self):
         # Create FlatPage
-        page = FlatPage()
-        page.url = '/about/'
-        page.title = 'About Me'
-        page.content = 'All about me. Well almost ...'
-        page.save()
+        page = FlatPageFactory()
 
         # Add the site
         page.sites.add(Site.objects.all()[0])
@@ -731,33 +639,15 @@ class FlatPageViewTest(BaseAcceptanceTest):
 class FeedTest(BaseAcceptanceTest):
     def test_all_post_feed(self):
         # Create the site
-        site = Site()
-        site.name = 'test.com'
-        site.domain = 'test.com'
-        site.save()
+        site = SiteFactory()
         # Create the category
-        category = Category()
-        category.name = 'pythonsky'
-        category.description = 'The pythonic programming language'
-        category.save()
+        category = CategoryFactory()
         #Create the tag
-        tag = Tag()
-        tag.name = 'python'
-        tag.description = 'The python programming language'
-        tag.save()
+        tag = TagFactory()
         # Create a post
-        post = Post()
-        post.title = 'My first post'
-        post.text = 'This is my first blog post'
-        post.slug = 'my-first-post'
-        post.pub_date = timezone.now()
-        post.site = site
-        post.category = category
-        # Save it
-        post.save()
+        post = PostFactory()
         # Add the tag
         post.tags.add(tag)
-        post.save()
         # Check we can find it
         all_posts = Post.objects.all()
         self.assertEquals(len(all_posts), 1)
