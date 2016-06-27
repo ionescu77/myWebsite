@@ -48,6 +48,18 @@ class TagFactory(factory.django.DjangoModelFactory):
     description = 'Pythonsky the programming language'
     slug = 'pythonsky'
 
+class FlatPageFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = FlatPage
+        django_get_or_create = (
+            'url',
+            'title',
+            'content'
+        )
+    url = '/about/'
+    title = 'About Me'
+    content = 'All about me. Well almost ...'
+
 # Create your tests here.
 class PostTest(TestCase):
     def test_create_category(self):
@@ -641,11 +653,7 @@ class PostViewTest(BaseAcceptanceTest):
 class FlatPageViewTest(BaseAcceptanceTest):
     def test_create_flatpage(self):
         # Create FlatPage
-        page = FlatPage()
-        page.url = '/about/'
-        page.title = 'About Me'
-        page.content = 'All about me. Well almost ...'
-        page.save()
+        page = FlatPageFactory()
 
         # Add the site
         page.sites.add(Site.objects.all()[0])
