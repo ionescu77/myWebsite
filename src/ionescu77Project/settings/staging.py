@@ -1,7 +1,7 @@
 import os
 from .base import *
 
-SECRET_KEY=os.environ['SECRET_KEY_RAZ']
+SECRET_KEY=os.environ['SECRET_KEY_IONESCU77_DEV']
 
 
 # Setup Database
@@ -12,7 +12,7 @@ DEBUG = False
 TEMPLATE_DEBUG = False
 DISQUS = False
 
-ALLOWED_HOSTS = ['ionescu77.avproiect.com']
+ALLOWED_HOSTS = ['ionescu77.staging.avproiect.com']
 
 INSTALLED_APPS += (
     'landing',
@@ -28,16 +28,16 @@ SITE_ID = 1
 #TEST_DATABASE_CHARSET=UTF8
 #CHARSET=UTF8 # supported for PG and MySQL only
 
-STATIC_ROOT = "/var/www/myProjects/ionescu77/static/"
-MEDIA_ROOT = "/var/www/myProjects/ionescu77/media/"
+STATIC_ROOT = '/home/ionescu77/webapps/apollo7/ionescu77/static/'
+MEDIA_ROOT = '/home/ionescu77/webapps/apollo7/ionescu77/media/'
 
 
+if 'TRAVIS' in os.environ:
+    INSTALLED_APPS += ('django_jenkins',)
 
-INSTALLED_APPS += ('django_jenkins',)
+    JENKINS_TASKS = (
+        'django_jenkins.tasks.run_pylint',
+        'django_jenkins.tasks.with_coverage',
+        )
 
-JENKINS_TASKS = (
-    'django_jenkins.tasks.run_pylint',
-    'django_jenkins.tasks.with_coverage',
-    )
-
-PROJECT_APPS = ['blogengine']
+    PROJECT_APPS = ['blogengine']
