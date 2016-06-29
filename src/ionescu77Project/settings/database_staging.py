@@ -24,10 +24,10 @@ if 'TRAVIS' in os.environ:
 else:
 # Database on staging:
 # Data is passed from ENV Variables or from activate
-    DB_NAME_IONESCU77=os.environ['DB_NAME_IONESCU77']
-    DB_USER_IONESCU77=os.environ['DB_USER_IONESCU77']
-    DB_PASS_IONESCU77=os.environ['DB_PASS_IONESCU77']
-    DB_PORT_IONESCU77=os.environ['DB_PORT_IONESCU77']
+    DB_NAME_IONESCU77=os.environ['DB_NAME_IONESCU77_DEV']
+    DB_USER_IONESCU77=os.environ['DB_USER_IONESCU77_DEV']
+    DB_PASS_IONESCU77=os.environ['DB_PASS_IONESCU77_DEV']
+    DB_PORT_IONESCU77=os.environ['DB_PORT_IONESCU77_DEV']
 
     DATABASES = {
         'default': {
