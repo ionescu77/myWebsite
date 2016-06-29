@@ -1,7 +1,20 @@
 import os
 from .base import *
 
-SECRET_KEY=os.environ['SECRET_KEY_IONESCU77_DEV']
+if 'TRAVIS' in os.environ:
+    SECRET_KEY=os.environ['SECRET_KEY_RAZ']
+
+    INSTALLED_APPS += ('django_jenkins',)
+
+    JENKINS_TASKS = (
+        'django_jenkins.tasks.run_pylint',
+        'django_jenkins.tasks.with_coverage',
+        )
+
+    PROJECT_APPS = ['blogengine']
+else:
+
+    SECRET_KEY=os.environ['SECRET_KEY_IONESCU77_DEV']
 
 
 # Setup Database
@@ -30,16 +43,3 @@ SITE_ID = 1
 
 STATIC_ROOT = '/home/ionescu77/webapps/apollo7/ionescu77/static/'
 MEDIA_ROOT = '/home/ionescu77/webapps/apollo7/ionescu77/media/'
-
-
-if 'TRAVIS' in os.environ:
-    SECRET_KEY=os.environ['SECRET_KEY_RAZ']
-
-    INSTALLED_APPS += ('django_jenkins',)
-
-    JENKINS_TASKS = (
-        'django_jenkins.tasks.run_pylint',
-        'django_jenkins.tasks.with_coverage',
-        )
-
-    PROJECT_APPS = ['blogengine']
