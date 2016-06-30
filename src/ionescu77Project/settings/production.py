@@ -13,18 +13,18 @@ if 'TRAVIS' in os.environ:
 
     PROJECT_APPS = ['blogengine']
 else:
-    SECRET_KEY=os.environ['SECRET_KEY_IONESCU77_DEV']
+    SECRET_KEY=os.environ['SECRET_KEY_IONESCU77']
 
 
 # Setup Database
-from .database_staging import DATABASES
+from .database_production import DATABASES
 DATABASES = DATABASES
 
 DEBUG = False
 TEMPLATE_DEBUG = False
-DISQUS = False
+DISQUS = True
 
-ALLOWED_HOSTS = ['ionescu77.staging.avproiect.com']
+ALLOWED_HOSTS = ['ionescu77.com']
 
 INSTALLED_APPS += (
     'landing',
@@ -40,5 +40,5 @@ SITE_ID = 1
 #TEST_DATABASE_CHARSET=UTF8
 #CHARSET=UTF8 # supported for PG and MySQL only
 
-STATIC_ROOT = '/home/ionescu77/webapps/apollo7/ionescu77/static/'
-MEDIA_ROOT = '/home/ionescu77/webapps/apollo7/ionescu77/media/'
+STATIC_ROOT = '/home/ionescu77/webapps/apollo13/ionescu77/static/'
+MEDIA_ROOT = '/home/ionescu77/webapps/apollo13/ionescu77/media/'

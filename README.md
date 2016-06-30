@@ -13,7 +13,7 @@ Am zis să public codul poate asta mă motivează să îi dau bice și să înce
 
 
 #Future sprints
-- adaugare Disqus pentru comentarii
+- adaugare Disqus pentru comentarii [Completed](https://github.com/ionescu77/myWebsite/issues/12)
 - adăugare formular de contact
 - css pt social icons
 - code refactoring
