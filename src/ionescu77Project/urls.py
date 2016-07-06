@@ -17,6 +17,8 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic.base import RedirectView
 
+from django.contrib.flatpages import views
+
 from django.contrib.sitemaps.views import sitemap
 from blogengine.sitemap import PostSitemap, FlatpageSitemap
 
@@ -40,6 +42,7 @@ urlpatterns = [
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 
     # FlatPage URLs
-    url(r'', include('django.contrib.flatpages.urls')),
+    # url(r'^$', include('django.contrib.flatpages.urls')), # this or catchall does not really work
+    url(r'^about/$', views.flatpage, {'url': '/about/'}, name='about'),
 
 ]
