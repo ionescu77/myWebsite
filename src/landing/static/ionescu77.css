@@ -246,7 +246,7 @@ and (max-width: 480px) {
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      font-size: 0.8em;
+      font-size: 0.9em;
       line-height: 80px;
       outline: 0;
       color: #fff;
@@ -262,13 +262,15 @@ and (max-width: 480px) {
   .btn-xl {
       border-color: #f6bf01;
       padding: 20px 50px;
-      border-radius: 3px;
+      border-radius: 20px;
       text-transform: uppercase;
       font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
       font-size: 14px;
       font-weight: 700;
-      color: #fff;
-      background-color: rgba(0,0,0,0.5);
+      /*color: #fff;*/
+      /*background-color: rgba(0,0,0,0.5);*/
+      color: transparent;
+      background-color: transparent;
       margin-top: 30px;
       margin-bottom: 30px;
   }
@@ -289,7 +291,7 @@ and (max-width: 768px) {
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      font-size: 0.7em;
+      font-size: 0.9em;
       line-height: 80px;
       outline: 0;
       color: #fff;
@@ -319,7 +321,7 @@ and (max-width: 1024px) {
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      font-size: 0.7em;
+      font-size: 0.9em;
       line-height: 80px;
       outline: 0;
       color: #fff;
