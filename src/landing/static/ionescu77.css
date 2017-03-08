@@ -188,7 +188,9 @@ fieldset[disabled] .btn-xl.active {
   color: #9d9d9d;
 }
 .inverse-dropdown > li > a:hover {
-  color: #fff;
+  color: #222;
+  background-image: none;
+  background-color: none;
 }
 .inverse-dropdown > .divider {
   background-color: #9d9d9d;
