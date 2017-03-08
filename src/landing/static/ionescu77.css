@@ -178,6 +178,21 @@ fieldset[disabled] .btn-xl.active {
     background-color: #fff;
 }
 
+/* Navbar dropdown background color */
+
+.inverse-dropdown {
+  background-color: #222;
+  border-color: #080808;
+}
+.inverse-dropdown > li > a {
+  color: #9d9d9d;
+}
+.inverse-dropdown > li > a:hover {
+  color: #fff;
+}
+.inverse-dropdown > .divider {
+  background-color: #9d9d9d;
+}
 
 /* SOCIAL Buttons Style */
 
