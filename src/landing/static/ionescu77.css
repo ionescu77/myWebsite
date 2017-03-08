@@ -8,12 +8,18 @@ body {
     -moz-background-size: cover;
     background-size: cover;
     -o-background-size: cover;
+    font-family: Tahoma, Arial, sans-serif;
 }
 
-/* ode format for brand */
+/* code format for brand */
 code {
     color: #f0ad4e;
     background-color: transparent;
+}
+
+pre {
+   font-family: "courier new", courier, monospace;
+   font-size: 14px;
 }
 
 .content_body, .center_footer {
@@ -44,8 +50,8 @@ code {
 }
 
 p {
-    font-size: 18px;
-/*    line-height: 1.5;*/
+    font-size: 16px;
+    /*line-height: 1.5em;*/
 }
 
 p.lower {
@@ -78,9 +84,10 @@ h4,
 h5,
 h6 {
     text-transform: uppercase;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-      /*font-family: Menlo,Monaco,Consolas,"Courier New",monospace;*/
-    font-weight: 300;
+    font-family: Trebuchet MS, Geneva, sans-serif;
+    /*font-family: Verdana, Geneva, sans-serif;*/
+    font-weight: 100;
+    line-height: 1.3em;
 }
 
 .quote {
@@ -99,7 +106,7 @@ body .intro-text {
 
 body .intro-text .intro-lead-in {
     margin-bottom: 25px;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: Verdana, Geneva, sans-serif;
     font-size: 22px;
     font-style: italic;
     line-height: 22px;
@@ -121,7 +128,7 @@ body .intro-text .intro-heading {
     border-radius: 35px;
     border-width: medium;
     text-transform: uppercase;
-    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: Verdana, Geneva, sans-serif;
     font-size: 18px;
     font-weight: 700;
     /*color: #f6bf01;*/
@@ -224,10 +231,10 @@ and (max-width: 480px) {
   }
   body .intro-text .intro-lead-in {
       margin-bottom: 30px;
-      font-family: "Droid Serif","Helvetica Neue",Helvetica,Arial,sans-serif;
+      font-family: "Droid Serif",Verdana, Geneva, sans-serif;
       font-size: 16px;
       font-style: italic;
-      line-height: 16px;
+      line-height: 18px;
   }
   body .intro-text .intro-heading {
       margin-bottom: 30px;
@@ -235,7 +242,7 @@ and (max-width: 480px) {
   /*    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif; */
       font-size: 22px;
       font-weight: 700;
-      line-height: 22px;
+      line-height: 24px;
   }
   h1 {
     font-size: 24px;
@@ -264,7 +271,7 @@ and (max-width: 480px) {
       padding: 20px 50px;
       border-radius: 20px;
       text-transform: uppercase;
-      font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+      font-family: Verdana, Geneva, sans-serif;
       font-size: 14px;
       font-weight: 700;
       /*color: #fff;*/

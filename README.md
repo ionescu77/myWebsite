@@ -7,6 +7,14 @@ Code Coverage: [![Coverage Status](https://coveralls.io/repos/ionescu77/myWebsit
 
 Codul sursă de la site-ul meu, încă nepublicat și mereu în lucru.
 
+
+Workflow (using git hooks & shell scripts for deployment):
+- dev -> local virtualenv (python 2.7.9 & runserver)
+- test -> ionescu77.avproiect.com (python 2.7.9 & mod_passenger)
+- live -> ionescu77.com (python 2.7.9 & & mod_wsgi)
+
+2016.03.08
+
 Am zis să public codul poate asta mă motivează să îi dau bice și să încep să mai și scriu câte ceva.
 
 2015.12.11
