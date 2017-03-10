@@ -245,6 +245,11 @@ ul.social-buttons li a:active {
 and (min-width: 320px)
 and (max-width: 480px) {
 
+  .carousel {
+    height: 300px;
+    margin-bottom: 60px;
+  }
+
   .carousel .item {
     height: 300px;
     background-color: #777;
@@ -309,6 +314,17 @@ and (max-width: 480px) {
 @media screen
 and (min-width: 480px)
 and (max-width: 768px) {
+
+  .carousel {
+    height: 300px;
+    margin-bottom: 60px;
+  }
+
+  .carousel .item {
+    height: 300px;
+    background-color: #777;
+  }
+
   body .intro-text {
       padding-top: 90px;
       padding-bottom: 45px;
