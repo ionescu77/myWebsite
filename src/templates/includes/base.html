@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>{% block title %}My Django Blog{% endblock %}</title>
+        <title>{% block title %}ionescu77.com webpage{% endblock %}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -99,43 +99,8 @@
       </div>
 
         <div class="container">
-
             <div class="row">
-              <div class="col-sm-10 blog-main">
                 {% block content %}{% endblock %}
-              </div><!-- /.col-lg-12  Main content -->
-
-              <div class="col-sm-2  blog-sidebar">
-                <div class="sidebar-module sidebar-module-inset">
-                  <h4>My Blog</h4>
-                  <p class="lower">Am răspândit <a href="https://en.wikipedia.org/wiki/Post-it_note">post-it-uri</a>, foi A4 <em>și caiete de notițe</em> pe 4 continente, în 2016 am zis că este timpul să îmi mut <a href="https://dexonline.ro/definitie/scriitur%C4%83">scriiturile</a> în mediul on-line.</p>
-                </div>
-                <div class="sidebar-module">
-                  <h4>Archives</h4>
-                  <ol class="list-unstyled">
-                    <li><a href="#">March 2014</a></li>
-                    <li><a href="#">February 2014</a></li>
-                    <li><a href="#">January 2014</a></li>
-                    <li><a href="#">December 2013</a></li>
-                    <li><a href="#">November 2013</a></li>
-                    <li><a href="#">October 2013</a></li>
-                    <li><a href="#">September 2013</a></li>
-                    <li><a href="#">August 2013</a></li>
-                    <li><a href="#">July 2013</a></li>
-                    <li><a href="#">June 2013</a></li>
-                    <li><a href="#">May 2013</a></li>
-                    <li><a href="#">April 2013</a></li>
-                  </ol>
-                </div>
-                <div class="sidebar-module">
-                  <h4>Elsewhere</h4>
-                  <ol class="list-unstyled">
-                    <li><a href="#">GitHub</a></li>
-                    <li><a href="#">Twitter</a></li>
-                    <li><a href="#">Facebook</a></li>
-                  </ol>
-                </div>
-              </div><!-- /.blog-sidebar -->
             </div><!-- /.row -->
 
             <div class="row">
@@ -145,26 +110,16 @@
               </div>
               </div><!-- /.col-sm-10  comments -->
             </div><!-- /.row -->
-
         </div><!-- /.container -->
 
-        <div class="container footer">
-
+        <!-- <div class="container footer"> -->
           <!-- FOOTER -->
           <footer>
           <div id="myFooter" class="footer-background">
             <!-- Indicators -->
                 <div class="container footer down-footer">
-                    <div class="row">
-                      <div class="col-lg-12">
-                        <br><hr>
-
-                          <p class="pull-right"><a href="#">Back to top</a></p>
-                          <p class="pull-left">&copy; {% now "Y" %} ionescu77.com &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
-                          <br>
-                      </div><!-- /.col-lg-12 -->
-                    </div><!-- /.row -->
                       <div class="row">
+                        <hr>
                         <div class="span12">
                           <div class="col-lg-12">
                             <center>
@@ -181,7 +136,6 @@
                                 </li>
                             </ul>
                             <!--/.social-bar-->
-                            <p>un proiect <a href="https://avproiect.com">avproiect.com</a></p>
                           </center>
                         </div><!-- /. col-lg-12 -->
                       </div><!-- /.span12 -->
@@ -189,8 +143,15 @@
                 </div>
               </div>
             </footer>
+            <div class="row">
+              <div class="col-sm-12">
+                <br>
+                <center><p>{% now "Y" %}</p></center>
+                <center><p>&hearts;</p></center>
+              </div><!-- /.col-lg-12 -->
+              </div><!-- /.row -->
 
-        </div>
+        <!-- </div> -->
 
 
 

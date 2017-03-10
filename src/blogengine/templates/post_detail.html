@@ -9,13 +9,8 @@
     {% endblock %}
 
     {% block content %}
-
+    <div class="col-sm-12 blog-main">
         <div class="post">
-          <nav>
-            <ul class="pager">
-              <li class="previous"><a href="/blog/"><span aria-hidden="true">&larr;</span> Article List</a></li>
-            </ul>
-          </nav>
         <h3>{{ object.title }}</h3>
         <p>
           <small>
@@ -37,11 +32,12 @@
         <hr>
         <nav>
           <ul class="pager">
-            <li class="previous"><a href="/blog/"><span aria-hidden="true">&larr;</span> Article List</a></li>
+            <li class="previous pull-left"><a href="/blog/"><span aria-hidden="true">&larr;</span> Article List</a></li>
+            <li class=" pull-right"><a href="#">Back to top</a></li>
           </ul>
         </nav>
-
         </div>
+      </div><!--/.col-sm-12 -->
 
 
     {% endblock %}

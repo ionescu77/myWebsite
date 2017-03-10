@@ -9,6 +9,7 @@
   {% endblock %}
 
     {% block content %}
+    <div class="col-sm-12 blog-main">
       {% if object_list %}
         {% for post in object_list %}
             <div class="post">
@@ -51,9 +52,9 @@
                   </small>
                 </p>
               </div><!-- /.col-sm-12-->
-            </div class="row"><!-- /.row-->
+            </div><!-- /.row-->
 
-          </div>
+          </div><!-- /.post-->
 
         {% endfor %}
       {% else %}
@@ -64,7 +65,7 @@
 
       <div class="col-sm-12 text-center">
         <span>
-          <br>
+          <hr>
         <ul class="pager">
           {% if page_obj.has_previous %}
           <li><a href="/blog/{{ page_obj.previous_page_number }}/"><span aria-hidden="true">&larr;</span> Prev</a></li>
@@ -78,7 +79,8 @@
           {% endif %}
         </ul>
         </span>
-
       </div><!-- /.col-lg-12-->
+
+    </div><!-- /.col-sm-12-->
 
     {% endblock %}

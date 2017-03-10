@@ -1,140 +1,49 @@
-<!doctype html>
-<html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>{% block title %}ionescu77.com{% endblock %}</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends "includes/base.html" %}
 
-        <link rel="apple-touch-icon" href="apple-touch-icon.png">
-        <!-- Place favicon.ico in the root directory -->
-        {% load staticfiles %}
-        <link rel="stylesheet" href="{% static 'bower_components/html5-boilerplate/dist/css/normalize.css' %}">
-        <link rel="stylesheet" href="{% static 'bower_components/html5-boilerplate/src/css/main.css' %}">
-        <link rel="stylesheet" href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
-        <link rel="stylesheet" href="{% static 'bower_components/bootstrap/dist/css/bootstrap-theme.min.css' %}">
-        <link rel="stylesheet" href="{% static 'ionescu77.css' %}">
-        <script src="{% static 'bower_components/html5-boilerplate/src/js/vendor/modernizr-2.8.3.min.js' %}"></script>
-        <!-- Font Awesome CSS -->
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    </head>
-    <body>
-        <!--[if lt IE 8]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-        <div class="navbar-wrapper">
-        <!-- Add your site or application content here -->
-        <nav class="navbar navbar-inverse">
-          <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="/"><code>ionescu77.com</code></a>
-            </div>
+  {% load custom_markdown %}
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-              <ul class="nav navbar-nav navbar-right">
-                <li><a href="/blog/">Blog <span class="sr-only">(current)</span></a></li>
-                <li><a href="/about/">About</a></li>
-                <li><a href="/about/">Contact</a></li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">More <span class="caret"></span></a>
-                  <ul class="dropdown-menu inverse-dropdown" role="menu">
-                    <li><a href="#">Bookmarks</a></li>
-                    <li><a href="#">Notes</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">Books</a></li>
-                    <li><a href="#">Photography</a></li>
-                    <li><a href="#">Art</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">Sites</a></li>
-                    <li><a href="#">Projects</a></li>
-                    <li><a href="#">Other</a></li>
-                    <form class="navbar-form navbar-left" role="search">
-                      <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search">
-                        <span class="input-group-btn">
-                          <button type="submit" class="btn btn-default">Submit</button>
-                        </span>
-                      </div><!-- /input-group -->
-                    </form>
+  {% block header %}
+      <div class="header">
+          <h1><code>Hello,</code></h1>
+      </div>
+  {% endblock %}
 
-                  </ul>
-                </li>
-              </ul>
-            </div><!-- /.navbar-collapse -->
-          </div><!-- /.container-fluid -->
-        </nav>
-      </div><!-- /.navbar-wrapper-->
+    {% block content %}
+    <div class="col-sm-12 blog-main">
+            <div class="post">
+              <div class="row">
+                <div class="col-sm-12">
+                    <h3>
+                      <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                    </h3>
+                </div><!-- /.col-sm-12-->
+              </div><!-- /.row-->
 
-
-      <!-- Cover Section -->
-      <section id="cover">
-        <div class="container container-cover">
-                {% block content %}
-                <div class="row content_body">
-                  <div class="col-lg-12">
-                    <a href="/blog/" class="page-scroll btn btn-xl">Press</a>
-                  </div><!-- /.col-lg-12 -->
-              </div><!-- /.row -->
-            </div><!-- /.container -->
-                {% endblock %}
-      </section>
-      <!-- Cover Section -->
-      <section id="content">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-12">
-              <!-- <h3 class="quote carousel-caption landing-caption">It's not enough to integrate, you must also disintegrate.<br> That's the way life is.<span><h3 class="quote">Eugene Ionesco</h3></span></h3> -->
-            </div>
-          </div><!-- ./row -->
-        </div>
-      </section>
-      <!-- Footer Section -->
-      <section id="footer">
-        <div class="container footer center_footer">
             <div class="row">
-                <div class="span12">
-                  <div class="col-lg-12">
-                    <ul class="list-inline social-buttons">
-                        <li><a href="https://de.linkedin.com/in/ionescu77"title="LinkedIn"><i class="fa fa-linkedin fa-4x"></i></a>
-                        </li>
-                        <li><a href="https://github.com/ionescu77" title="Github"><i class="fa fa-github fa-4x"></i></a>
-                        </li>
-                        <li><a href="https://twitter.com/razvansky"title="Twitter"><i class="fa fa-twitter fa-4x"></i></a>
-                        </li>
-                        <li><a href="https://www.facebook.com/ionescu77" title="Facebook"><i class="fa fa-facebook fa-4x"></i>  </a>
-                        </li>
-                        <li><a href="mailto:razvi_98@yahoo.com?subject=Ionescu77 Blog Contact" title="Public Email"><i class="fa fa-envelope-o fa-4x"></i>  </a>
-                        </li>
-                    </ul>
-                    <!--/.social-bar-->
-                  <br>
-                  </div><!-- /.col-lg-12 -->
-                </div><!-- /.span12 -->
-            </div>
-            <div class="row credits">
-              <div class="col-lg-12">
-                  <p><small> &copy; {% now "Y" %}, un proiect <a href="https://avproiect.com">avproiect.com</a>, cover photo <a href="https://www.facebook.com/jacques.rall.photography/">jacques rall photography</a><small></p>
-              </div>
-            </div>
-        </div>
+              <div class="col-sm-12">
+                <p>
+                  <small>
+                    {{ post.pub_date }}
+                    <span class="h3">
+                      {% if post.category %}
+                        <a href="{{ post.category.get_absolute_url }}"><span class="label label-default">{{ post.category.name }}</span></a>
+                      {% endif %}
+                    </span>
+                    <br>
+                    {{ post.text | custom_markdown | truncatechars_html:159 }}
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="{% static 'bower_components/html5-boilerplate/src/js/vendor/jquery-1.11.3.min.js' %}"><\/script>')</script>
-        <script src="{% static 'bower_components/html5-boilerplate/src/js/plugins.js' %}"></script>
-        <script src="{% static 'bower_components/html5-boilerplate/src/js/main.js' %}"></script>
-        <script src="{% static 'bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
-        <!-- Custom JS -->
-        <script src="{% static 'ionescu77.js' %}"></script>
-      </section>
+                    <span class="h4">
+                    {% for tag in post.tags.all %}
+                      <a href="{{ tag.get_absolute_url }}"><span class="label label-warning">{{ tag.name }}</span></a>
+                    {% endfor %}
+                    </span>
+                  </small>
+                </p>
+              </div><!-- /.col-sm-12-->
+            </div><!-- /.row-->
 
-    </body>
-</html>
+          </div><!-- /.post-->
+        </div><!-- /.col-sm-12-->
+
+
+    {% endblock %}
