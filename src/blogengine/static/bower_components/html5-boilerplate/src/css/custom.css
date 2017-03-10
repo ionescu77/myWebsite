@@ -48,11 +48,3 @@ code {
     background-color: #010101;
     border-color: #f0ad4e;
 }
-
-ul.social-buttons li a {
-    width: 70px;
-    height: 70px;
-    border-radius: 25px 25px 25px 25px;
-    font-size: 16px;
-    line-height: 80px;
-}
