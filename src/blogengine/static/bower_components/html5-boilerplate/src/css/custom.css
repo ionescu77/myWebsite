@@ -48,3 +48,17 @@ code {
     background-color: #010101;
     border-color: #f0ad4e;
 }
+
+.pager .disabled >a, .pager .disabled >a:focus, .pager .disabled >a:hover, .pager .disabled >span {
+  color: #777;
+  cursor: not-allowed;
+  background-color: unset;
+  border-color: unset;
+}
+
+.pager .active >a, .pager .active >a:focus, .pager .active >a:hover {
+  color: #777;
+  cursor: not-allowed;
+  background-color: unset;
+  border-color: unset;
+}
