@@ -1,6 +1,6 @@
 {% extends "includes/base.html" %}
 
-  {% load custom_markdown %}
+  {% load custom_markdown replace %}
 
   {% block header %}
       <div class="header">
@@ -59,19 +59,21 @@
         <span>
           <hr>
         <ul class="pager">
+          {% with request.path as url_path %}
           {% if page_obj.has_previous %}
-          <li><a href="/blog/{{ page_obj.previous_page_number }}/"><span aria-hidden="true">&larr;</span> Prev</a></li>
+          <li><a href="/blog/category/{{ post.category.slug }}/{{ page_obj.previous_page_number }}/"><span aria-hidden="true">&larr;</span> Prev</a></li>
           {% else %}
           <li class="disabled"><a href=""><span aria-hidden="true">&larr;</span> Prev</a></li>
           {% endif %}
           {% for page in page_obj.paginator.page_range %}
-              <li class=" {% if page_obj.number == page  %} active {% endif %} "><a href="/blog/{{ page }}">{{ page }}</a></li>
+              <li class=" {% if page_obj.number == page  %} active {% endif %} "><a href="{{ url_path | replace:"/([0-9]+)$/" }}{{ page }}">{{ page }}</a></li>
           {% endfor %}
           {% if page_obj.has_next %}
-          <li><a href="/blog/{{ page_obj.next_page_number }}/">Next <span aria-hidden="true">&rarr;</span></a></li>
+          <li><a href="/blog/category/{{ post.category.slug }}/{{ page_obj.next_page_number }}/">Next <span aria-hidden="true">&rarr;</span></a></li>
           {% else %}
           <li class="disabled"><a href="">Next <span aria-hidden="true">&rarr;</span></a></li>
           {% endif %}
+          {% endwith %}
         </ul>
         </span>
 

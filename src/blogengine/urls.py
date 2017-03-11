@@ -15,18 +15,18 @@ urlpatterns = [
      DetailView.as_view()),
 
     # Categories
-    url(r'^category/(?P<slug>[a-zA-Z0-9-]+)/?$',
+    url(r'^category/(?P<slug>[a-zA-Z0-9-]+)/(?P<page>\d+)?/?$',
      CategoryListView.as_view(
         paginate_by=5,
         model=Category,
-        )),
+        ), name = 'category_list'),
 
     # Tags
     url(r'^tag/(?P<slug>[a-zA-Z0-9-]+)/?$',
      TagListView.as_view(
         paginate_by=5,
         model=Tag,
-        )),
+        ), name = 'tag_list'),
 
     # Posts RSS feed
     url(r'^feeds/posts/$', PostsFeed()),
