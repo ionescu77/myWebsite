@@ -7,6 +7,12 @@ Code Coverage: [![Coverage Status](https://coveralls.io/repos/ionescu77/myWebsit
 
 Codul sursă de la site-ul meu, încă nepublicat și mereu în lucru.
 
+Run tests locally with jenkins (django style does not work anymore)
+
+```
+python src/manage.py jenkins blogengine
+```
+20170311
 
 Workflow (using git hooks & shell scripts for deployment):
 - dev -> local virtualenv (python 2.7.9 & runserver)
