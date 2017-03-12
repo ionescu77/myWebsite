@@ -19,7 +19,12 @@ class CategoryListView(ListView):
             category = Category.objects.get(slug=slug)
             return Post.objects.filter(category=category)
         except Category.DoesNotExist:
-            return Post.objects.none()                      # returns "No posts found"
+            return Post.objects.none()                     # returns "No posts found"
+    def get_context_data(self, **kwargs):       # see Github #41
+        slug = self.kwargs['slug']
+        context = super(CategoryListView, self).get_context_data(**kwargs) # get the default context data
+        context['category_name'] = slug
+        return context
 
 class TagListView(ListView):
     template_name = 'tag_list.html'
@@ -31,6 +36,11 @@ class TagListView(ListView):
             return tag.post_set.all()
         except Tag.DoesNotExist:
             return Post.objects.none()
+    def get_context_data(self, **kwargs):       # see Github #41
+        slug = self.kwargs['slug']
+        context = super(TagListView, self).get_context_data(**kwargs) # get the default context data
+        context['tag_name'] = slug
+        return context
 
 class PostListView(ListView):
     model = Post

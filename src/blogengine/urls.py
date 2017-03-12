@@ -22,7 +22,7 @@ urlpatterns = [
         ), name = 'category_list'),
 
     # Tags
-    url(r'^tag/(?P<slug>[a-zA-Z0-9-]+)/?$',
+    url(r'^tag/(?P<slug>[a-zA-Z0-9-]+)/(?P<page>\d+)?/?$',
      TagListView.as_view(
         paginate_by=5,
         model=Tag,
