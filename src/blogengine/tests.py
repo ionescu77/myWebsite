@@ -584,7 +584,7 @@ class PostViewTest(BaseAcceptanceTest):
         # Get the tag URL
         tag_url = post.tags.all()[0].get_absolute_url()
         # Fetch the non-existing tag to test view exception
-        response = self.client.get("/blog/tag/non-existing")
+        response = self.client.get("/blog/tag/non-existing", follow = True)
         self.assertEqual(response.status_code, 200)
         # Check empty querySet objects.none() - returns "No posts found"
         self.assertTrue('no coresponding posts found' in response.content.decode('utf-8'))
