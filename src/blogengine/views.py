@@ -1,5 +1,6 @@
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, View
 # for code markdown
 #from django.utils.encoding import force_str
 #from django.utils.safestring import mark_safe
@@ -9,24 +10,24 @@ from django.contrib.syndication.views import Feed
 
 from blogengine.models import Post, Category, Tag
 
-# from blogengine.forms import PostCreateForm
+from blogengine.forms import PostCreateForm
 
 # Create your views here.
 
-class PostCreateView(CreateView):
-    model = Post
-    fields = [
-        "title",
-        "text",
-        "pub_date",
-        "slug",
-        "site",
-        "category",
-        "tags"
-
-    ]
+class PostCreateView(View):
+    form_class = PostCreateForm
     template_name = 'post_create.html'
-    # form_class= PostCreateForm
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            # <process form cleaned data>
+            return HttpResponseRedirect('/success/')
+        return render(request, self.template_name, {'form': form})    #
+    # def post_create(self, request):
+    #     return render(request, self.template_name, context)
     # success_url = '/thanks/'
 
 class PostListView(ListView):

@@ -7,7 +7,7 @@ urlpatterns = [
 
     url(r'^create/$',
      PostCreateView.as_view()),
-    
+
     # Index Blog - Posts List
     url(r'^(?P<page>\d+)?/?$',
      PostListView.as_view(
