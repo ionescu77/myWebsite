@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 # for code markdown
 #from django.utils.encoding import force_str
 #from django.utils.safestring import mark_safe
@@ -9,7 +9,45 @@ from django.contrib.syndication.views import Feed
 
 from blogengine.models import Post, Category, Tag
 
+# from blogengine.forms import PostCreateForm
+
 # Create your views here.
+
+class PostCreateView(CreateView):
+    model = Post
+    fields = [
+        "title",
+        "text",
+        "pub_date",
+        "slug",
+        "site",
+        "category",
+        "tags"
+
+    ]
+    template_name = 'post_create.html'
+    # form_class= PostCreateForm
+    # success_url = '/thanks/'
+
+class PostListView(ListView):
+    model = Post
+    template_name = 'post_list.html'
+
+class DetailView(DetailView):
+    model = Post
+    template_name = 'post_detail.html'
+
+class PostsFeed(Feed):
+    title = "ionescu77.com RSS feed - posts"
+    link = "blog/feeds/posts/"
+    description = "ionescu77.com RSS feed - blog posts"
+    def items(self):
+        return Post.objects.order_by('-pub_date')
+    def item_title(self, item):
+        return item.title
+    def item_description(self, item):
+        return item.text
+
 class CategoryListView(ListView):
     template_name = 'category_list.html'
 
@@ -41,22 +79,3 @@ class TagListView(ListView):
         context = super(TagListView, self).get_context_data(**kwargs) # get the default context data
         context['tag_name'] = slug
         return context
-
-class PostListView(ListView):
-    model = Post
-    template_name = 'post_list.html'
-
-class DetailView(DetailView):
-    model = Post
-    template_name = 'post_detail.html'
-
-class PostsFeed(Feed):
-    title = "ionescu77.com RSS feed - posts"
-    link = "blog/feeds/posts/"
-    description = "ionescu77.com RSS feed - blog posts"
-    def items(self):
-        return Post.objects.order_by('-pub_date')
-    def item_title(self, item):
-        return item.title
-    def item_description(self, item):
-        return item.text

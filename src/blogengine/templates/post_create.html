@@ -1,0 +1,37 @@
+{% extends "includes/base.html" %}
+
+    {% load custom_markdown %}
+
+    {% block header %}
+        <div class="header">
+            <h1><code>Create Post</code></h1>
+        </div>
+    {% endblock %}
+
+    {% block content %}
+    <div class="col-sm-12 blog-main">
+        <div class="form-group">
+        <h3>Form</h3>
+        <p>
+          <form action="" method="post">{% csrf_token %}
+              {{ form.as_p }}
+              <input type="submit" value="Save" />
+          </form>
+        </p>
+        <hr>
+        <p class="text-justified"> object.text|custom_markdown </p>
+        <hr>
+        <nav>
+          <ul class="pager">
+            <li class="previous pull-left"><a href="/blog/"><span aria-hidden="true">&larr;</span> Article List</a></li>
+            <li class=" pull-right"><a href="#">Back to top</a></li>
+          </ul>
+        </nav>
+        </div>
+      </div><!--/.col-sm-12 -->
+
+
+    {% endblock %}
+
+{% block comments %}
+{% endblock %}
