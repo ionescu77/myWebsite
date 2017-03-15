@@ -105,25 +105,19 @@ class PostTest(TestCase):
     def test_create_post(self):
       # Create the site
       site = SiteFactory()
-
       # Create the category
       category = CategoryFactory()
-
       # Create the tag
       tag = TagFactory()
-
       # Create the post
       post = PostFactory()
-
       # Add the tag only after creating post
       post.tags.add(tag)
-
       # Check if we can find it
       all_posts = Post.objects.all()
       self.assertEquals(len(all_posts), 1)
       only_post = all_posts[0]
       self.assertEquals(only_post, post)
-
       # Check attributes
       self.assertEquals(only_post.title, 'My test post')
       #print '%s' %(only_post.text)
@@ -139,7 +133,6 @@ class PostTest(TestCase):
       self.assertEquals(only_post.site.domain, 'test.com')
       self.assertEquals(only_post.category.name, 'python')
       self.assertEquals(only_post.category.description, 'Python the programming language')
-
       # Check tags
       post_tags = only_post.tags.all()
       self.assertEquals(len(post_tags), 1)
@@ -163,7 +156,6 @@ class PostTest(TestCase):
       self.assertEquals(len(all_posts), 1)
       only_post = all_posts[0]
       self.assertEquals(only_post, post)
-
       # Check attributes
       self.assertEquals(only_post.title, u'Testul cu șțăîâ')
       print '%s' %(only_post.text)
@@ -175,7 +167,6 @@ class PostTest(TestCase):
       self.assertEquals(only_post.pub_date.hour, post.pub_date.hour)
       self.assertEquals(only_post.pub_date.minute, post.pub_date.minute)
       self.assertEquals(only_post.pub_date.second, post.pub_date.second)
-
       # Check tags
       post_tags = only_post.tags.all()
       self.assertEquals(len(post_tags), 1)
@@ -184,6 +175,27 @@ class PostTest(TestCase):
       self.assertEquals(only_post_tag.name, u'răzvansky')
       self.assertEquals(only_post_tag.description, u'Răzvan the programming language')
       self.assertEquals(only_post_tag.slug, u'razvansky')
+
+    def test_create_slug(self):
+        # Create the site
+        site = SiteFactory()
+        # Create the category
+        category = CategoryFactory()
+        # Create the tag
+        tag = TagFactory()
+        # Create the post
+        post = PostFactory()
+        # Add the tag only after creating post
+        post.tags.add(tag)
+        # Change the slug using the new function
+        print '%s' %post.slug
+        post.slug = "test diacritice üöä și ț"
+        print '%s' %post.slug
+        # slug = self.create_slug()
+        # Check if we can find it
+        all_posts = Post.objects.all()
+
+
 
 class BaseAcceptanceTest(LiveServerTestCase):
     def setUp(self):
@@ -681,3 +693,35 @@ class SiteMapTest(BaseAcceptanceTest):
         self.assertTrue('my-test-post' in response.content)
         # Check page is present in sitemap
         self.assertTrue('/about/' in response.content)
+
+class PostCreateViewTest(BaseAcceptanceTest):
+    # We need to fill the auth database for form login test
+    fixtures = ['users.json']
+
+    def setUp(self):
+        # Create client
+        self.client = Client()
+
+    def test_create_post_nonAuth(self):
+        response = self.client.get("/blog/create", follow=True)
+        self.assertEqual(response.status_code, 404)
+
+    def test_create_post_Auth(self):
+        # Log the user in
+        self.client.login(username='testuser', password="test")
+        response = self.client.get("/blog/create", follow=True)
+        self.assertEqual(response.status_code, 200)
+        # Check 'Form' in response
+        self.assertTrue('Form' in response.content)
+
+    # def test_valid_form(self):
+    #     w = Whatever.objects.create(title='Foo', body='Bar')
+    #     data = {'title': w.title, 'body': w.body,}
+    #     form = WhateverForm(data=data)
+    #     self.assertTrue(form.is_valid())
+    #
+    # def test_invalid_form(self):
+    #     w = Whatever.objects.create(title='Foo', body='')
+    #     data = {'title': w.title, 'body': w.body,}
+    #     form = WhateverForm(data=data)
+    #     self.assertFalse(form.is_valid())
