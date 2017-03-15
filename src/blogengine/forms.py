@@ -9,5 +9,8 @@ class PostCreateForm(forms.ModelForm):
             "title",
             "text",
             "pub_date",
+            "category",
+            "tags",
             "site"
+
         ]
