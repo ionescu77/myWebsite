@@ -9,7 +9,6 @@ from django.views.generic import ListView, DetailView, View
 from django.contrib.syndication.views import Feed
 
 from blogengine.models import Post, Category, Tag
-
 from blogengine.forms import PostCreateForm
 
 from django.utils import timezone
@@ -19,7 +18,9 @@ class PostCreateView(View):
     form_class = PostCreateForm
     template_name = 'post_create.html'
     success_url = '/success/'
-    initial = {'pub_date': timezone.now()}
+    initial = {
+        'pub_date': timezone.now(),
+        }
     def get(self, request, *args, **kwargs):
         form = self.form_class(initial=self.initial)
         return render(request, self.template_name, {'form': form})
@@ -27,7 +28,6 @@ class PostCreateView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             # <process form cleaned data>
-
             instance=form.save(commit=False)
             instance.save()
             # return HttpResponseRedirect( self.success_url )

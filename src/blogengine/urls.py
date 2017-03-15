@@ -2,11 +2,13 @@ from django.conf.urls import patterns, url
 from blogengine.models import Post, Category, Tag
 from blogengine.views import PostCreateView, PostListView, DetailView, CategoryListView, TagListView, PostsFeed
 
+from django.contrib.auth.decorators import login_required, permission_required
 
 urlpatterns = [
 
     url(r'^create/$',
-     PostCreateView.as_view()),
+        login_required(PostCreateView.as_view())    # added login_required but need settings.LOGIN_URL for user friendlines
+     ),
 
     # Index Blog - Posts List
     url(r'^(?P<page>\d+)?/?$',
