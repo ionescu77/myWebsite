@@ -7,5 +7,7 @@ class PostCreateForm(forms.ModelForm):
         model = Post
         fields = [
             "title",
-            "text"
+            "text",
+            "pub_date",
+            "site"
         ]

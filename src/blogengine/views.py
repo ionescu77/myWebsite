@@ -12,23 +12,27 @@ from blogengine.models import Post, Category, Tag
 
 from blogengine.forms import PostCreateForm
 
+from django.utils import timezone
 # Create your views here.
 
 class PostCreateView(View):
     form_class = PostCreateForm
     template_name = 'post_create.html'
+    success_url = '/success/'
+    initial = {'pub_date': timezone.now()}
     def get(self, request, *args, **kwargs):
-        form = self.form_class()
+        form = self.form_class(initial=self.initial)
         return render(request, self.template_name, {'form': form})
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
             # <process form cleaned data>
-            return HttpResponseRedirect('/success/')
+
+            instance=form.save(commit=False)
+            instance.save()
+            # return HttpResponseRedirect( self.success_url )
+            return HttpResponse ("Success")
         return render(request, self.template_name, {'form': form})    #
-    # def post_create(self, request):
-    #     return render(request, self.template_name, context)
-    # success_url = '/thanks/'
 
 class PostListView(ListView):
     model = Post
