@@ -9,7 +9,7 @@ Codul sursă de la site-ul meu, încă nepublicat și mereu în lucru.
 
 Run coverage locally and generate nice html reports (in ./reports/coverage)
 ```
-python src/manage.py jenkins --enable-coverage --coverage-format html
+python src/manage.py jenkins --enable-coverage --coverage-format html blogengine
 ```
 
 Run tests locally with jenkins (django style does not work anymore)
