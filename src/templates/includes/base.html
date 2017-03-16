@@ -151,11 +151,11 @@
                         <center>
                           <p>
                             {% if user.is_authenticated %}
-                              <a href="{% url 'logout' %}">
+                              <a href="{% url 'mylogout' %}">
                                 <i class="glyphicon glyphicon-flash"></i>
                               </a>
                             {% else %}
-                              <a href="{% url 'login' %}">
+                              <a href="{% url 'mylogin' %}">
                                 <i class="glyphicon glyphicon-lock"></i>
                               </a>
                             {% endif %}

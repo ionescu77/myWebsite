@@ -9,6 +9,7 @@ from blogengine.sitemap import PostSitemap, FlatpageSitemap
 
 from accounts.views import (login_view, register_view, logout_view)
 
+from axes.decorators import watch_login
 
 sitemaps = {
     'posts': PostSitemap,
@@ -29,10 +30,10 @@ urlpatterns = [
     # Accounts page URLs
     #url(r'^$', include('accounts.urls', namespace='accounts')),
     # Accounts login page URLs
-    url(r'^login/$', login_view, name="login"),
+    url(r'^mylogin/$', watch_login(login_view), name="mylogin"),
 
     # Accounts logout page URLs
-    url(r'^logout/$', logout_view, name="logout"),
+    url(r'^mylogout/$', logout_view, name="mylogout"),
 
 
     # Create sitemaps.xml

@@ -18,6 +18,7 @@ INSTALLED_APPS += (
     'django.contrib.syndication',
     'django.contrib.sitemaps',
     'crispy_forms',
+    'axes',
 )
 
 SITE_ID = 1
@@ -32,3 +33,7 @@ JENKINS_TASKS = ()
 PROJECT_APPS = ['blogengine']
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+AXES_VERBOSE = False
+
+AXES_LOCKOUT_TEMPLATE = 'lockout.html'

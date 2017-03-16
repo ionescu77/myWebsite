@@ -35,6 +35,7 @@ INSTALLED_APPS += (
     'django.contrib.syndication',
     'django.contrib.sitemaps',
     'crispy_forms',
+    'axes',
 )
 
 SITE_ID = 1
@@ -46,3 +47,7 @@ STATIC_ROOT = '/home/ionescu77/webapps/apollo7/ionescu77/static/'
 MEDIA_ROOT = '/home/ionescu77/webapps/apollo7/ionescu77/media/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+AXES_VERBOSE = False
+
+AXES_LOCKOUT_TEMPLATE = 'lockout.html'
