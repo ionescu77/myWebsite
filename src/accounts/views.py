@@ -19,7 +19,7 @@ def login_view(request):
        user = authenticate(username=username, password=password)
        login(request, user)
        print(request.user.is_authenticated())
-       # redirect
+       return redirect("/blog/")
     return render(request, "auth_form.html", {"form":form, "title": title})
 
 def register_view(request):
