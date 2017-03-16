@@ -9,6 +9,16 @@
   {% endblock %}
 
     {% block content %}
+
+    {% if user.is_authenticated %}
+      <div class="col-sm-12 blog-menu">
+          <ul class="pager">
+            <li><a href="{% url 'create_post' %}">Create Post</a></li>
+            <!-- <li><a href="#">Next</a></li> -->
+          </ul>
+      </div>
+    {% endif %}
+
     <div class="col-sm-12 blog-main">
       {% if object_list %}
         {% for post in object_list %}

@@ -9,6 +9,11 @@ code {
     background-color: transparent;
 }
 
+/*For Create Post Form*/
+input, textarea, option {         /* for text in form inputs, cause it was white */
+    color: black;
+}
+
 .background-caption{
 	border-radius: 0px !important;
 	background-color: rgba(0, 0, 0, 0.7);
