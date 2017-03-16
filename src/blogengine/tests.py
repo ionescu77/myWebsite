@@ -200,7 +200,10 @@ class PostTest(TestCase):
       print "post slug: %s" %post.slug
       # A bit nasty here but I need to move on for now, make it work
       site = Site.objects.get(pk=1)
-      category = Category.objects.get(pk=1)
+      cat_pk = str(category.pk)
+      print "%s" %cat_pk
+      category = Category.objects.get(pk=cat_pk)
+    #   category = str(category.pk)
       post_dup = Post(
                     title = 'My test post',
                     text = 'Whatever but title already exists in DB',
