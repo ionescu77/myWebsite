@@ -180,26 +180,6 @@ class PostTest(TestCase):
       self.assertEquals(only_post_tag.description, u'Răzvan the programming language')
       self.assertEquals(only_post_tag.slug, u'razvansky')
 
-    def test_create_slug(self):
-        # Create the site
-        site = SiteFactory()
-        # Create the category
-        category = CategoryFactory()
-        # Create the tag
-        tag = TagFactory()
-        # Create the post
-        post = PostFactory()
-        # Add the tag only after creating post
-        post.tags.add(tag)
-        # Change the slug using the new function
-        print '%s' %post.slug
-        post.slug = "test diacritice üöä și ț"
-        print '%s' %post.slug
-        # slug = self.create_slug()
-        # Check if we can find it
-        all_posts = Post.objects.all()
-
-
 
 class BaseAcceptanceTest(LiveServerTestCase):
     def setUp(self):
@@ -708,32 +688,54 @@ class PostCreateViewTest(BaseAcceptanceTest):
         self.client = Client()
     # Test non-authenticated, should give 404
     def test_create_post_nonAuth(self):
+        # Check response code
         response = self.client.get("/blog/create", follow=True)
         self.assertEqual(response.status_code, 404)
     # Test authenticate and then access create form
     def test_create_post_Auth(self):
-        # Log the user in
+        # Log in
         self.client.login(username='testuser', password="test")
+        # Check response code
         response = self.client.get("/blog/create", follow=True)
         self.assertEqual(response.status_code, 200)
         # Check 'Form' in response
-        self.assertTrue('Form' in response.content)
+        self.assertTrue('Site' in response.content)
+        # Log out
+        self.client.logout()
 
-    # def test_valid_form(self):
-    #     w = Whatever.objects.create(title='Foo', body='Bar')
-    #     data = {'title': w.title, 'body': w.body,}
-    #     form = WhateverForm(data=data)
-    #     self.assertTrue(form.is_valid())
-    #
-    # def test_invalid_form(self):
-    #     w = Whatever.objects.create(title='Foo', body='')
-    #     data = {'title': w.title, 'body': w.body,}
-    #     form = WhateverForm(data=data)
-    #     self.assertFalse(form.is_valid())
-
-# TEST for Models
-# class PostModelTest(TestCase):
-#     post = PostFactory()
-#     def test_model_title(self):
-#         self.assertTrue(isinstance(post,PostFactory))
-#         self.assertEqual(post.__unicode__(), post.title)
+    def test_create_post(self):
+        # Create the category
+        category = CategoryFactory()
+        # Create the tag
+        tag = TagFactory()
+        # Log in
+        self.client.login(username='testuser', password='test')
+        # GET request, will set initial pub_date
+        # Check response code
+        response = self.client.get('/blog/create', follow=True)
+        self.assertEquals(response.status_code, 200)
+        # Check Date was set got pub_date, match for curent year
+        curent_year = timezone.now().strftime("%Y-%m-%d")
+        # print "%s" %curent_year
+        self.assertTrue( curent_year in response.content)
+        # Check Save button in Post Create Form Page
+        self.assertTrue('Save' in response.content)
+        # Create the new post
+        valid_date_time = timezone.now().strftime("%Y-%m-%d %H:%M:%S")        # make acceptable string
+        print "%s" %valid_date_time
+        response = self.client.post('/blog/create/', {
+            'title': 'My first post',
+            'text': 'This is my first post',
+            'pub_date': valid_date_time,
+            'site': '1',
+            'category': str(category.pk),
+            'tags': str(tag.pk)
+        },
+        follow=True
+        )
+        # print "%s" %response
+        self.assertEquals(response.status_code, 200)
+        self.assertTrue('Success' in response.content)
+        # Check new post now in database
+        all_posts = Post.objects.all()
+        self.assertEquals(len(all_posts), 1)
