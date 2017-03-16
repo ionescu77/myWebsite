@@ -1,7 +1,7 @@
 {% extends "includes/base.html" %}
 
     {% load custom_markdown %}
-
+    {% block title %} Create Post Form {% endblock %}
     {% block header %}
         <div class="header">
             <h1><code>Create Post</code></h1>
@@ -11,7 +11,6 @@
     {% block content %}
     <div class="col-sm-12 blog-main">
         <div class="form-group">
-        <h3>Form</h3>
         <p>
           <form action="" method="post">{% csrf_token %}
               {{ form.as_p }}

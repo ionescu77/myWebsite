@@ -6,11 +6,10 @@ class PostCreateForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = [
-            "title",
-            "text",
+            "site",
             "pub_date",
             "category",
             "tags",
-            "site"
-
+            "title",
+            "text",
         ]

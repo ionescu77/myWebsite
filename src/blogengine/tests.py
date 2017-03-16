@@ -81,6 +81,10 @@ class PostTest(TestCase):
     def test_create_category(self):
       # Create the category
       category = CategoryFactory()
+      #   Check Category Model methods
+      self.assertTrue(isinstance(category,Category))
+      self.assertEqual(category.__unicode__(), category.name)
+
       # Check if we can find it
       all_categories = Category.objects.all()
       self.assertEquals(len(all_categories), 1)
@@ -694,6 +698,7 @@ class SiteMapTest(BaseAcceptanceTest):
         # Check page is present in sitemap
         self.assertTrue('/about/' in response.content)
 
+# TEST for PostCreateForm View
 class PostCreateViewTest(BaseAcceptanceTest):
     # We need to fill the auth database for form login test
     fixtures = ['users.json']
@@ -701,11 +706,11 @@ class PostCreateViewTest(BaseAcceptanceTest):
     def setUp(self):
         # Create client
         self.client = Client()
-
+    # Test non-authenticated, should give 404
     def test_create_post_nonAuth(self):
         response = self.client.get("/blog/create", follow=True)
         self.assertEqual(response.status_code, 404)
-
+    # Test authenticate and then access create form
     def test_create_post_Auth(self):
         # Log the user in
         self.client.login(username='testuser', password="test")
@@ -725,3 +730,10 @@ class PostCreateViewTest(BaseAcceptanceTest):
     #     data = {'title': w.title, 'body': w.body,}
     #     form = WhateverForm(data=data)
     #     self.assertFalse(form.is_valid())
+
+# TEST for Models
+# class PostModelTest(TestCase):
+#     post = PostFactory()
+#     def test_model_title(self):
+#         self.assertTrue(isinstance(post,PostFactory))
+#         self.assertEqual(post.__unicode__(), post.title)

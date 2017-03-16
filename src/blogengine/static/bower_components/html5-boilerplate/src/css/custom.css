@@ -9,7 +9,8 @@ code {
     background-color: transparent;
 }
 
-input, textarea {         /* for text in form inputs, cause it was white */
+/*For Create Post Form*/
+input, textarea, option {         /* for text in form inputs, cause it was white */
     color: black;
 }
 
