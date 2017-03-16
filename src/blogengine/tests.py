@@ -199,11 +199,8 @@ class PostTest(TestCase):
       only_post = all_posts[0]
       print "post slug: %s" %post.slug
       # A bit nasty here but I need to move on for now, make it work
-      site = Site.objects.get(pk=1)
-      cat_pk = str(category.pk)
-      print "%s" %cat_pk
-      category = Category.objects.get(pk=cat_pk)
-    #   category = str(category.pk)
+      site = Site.objects.get(pk=str(site.pk))      # get(pk=1) will work on sqlit but not on posgtres - diff- id for pk
+      category = Category.objects.get(pk=str(category.pk))
       post_dup = Post(
                     title = 'My test post',
                     text = 'Whatever but title already exists in DB',
