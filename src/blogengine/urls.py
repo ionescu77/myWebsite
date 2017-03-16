@@ -7,7 +7,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 urlpatterns = [
 
     url(r'^create/$',
-        login_required(PostCreateView.as_view())    # added login_required but need settings.LOGIN_URL for user friendlines
+        login_required(PostCreateView.as_view()),
+        name = 'create_post'    # added login_required but need settings.LOGIN_URL for user friendlines
      ),
 
     # Index Blog - Posts List
