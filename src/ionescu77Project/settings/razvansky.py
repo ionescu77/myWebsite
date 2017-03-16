@@ -12,10 +12,12 @@ ALLOWED_HOSTS = ['127.0.0.1']
 INSTALLED_APPS += (
     'landing',
     'blogengine',
+    'accounts',
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django.contrib.syndication',
     'django.contrib.sitemaps',
+    'crispy_forms',
 )
 
 SITE_ID = 1
@@ -28,3 +30,5 @@ INSTALLED_APPS += ('django_jenkins',)
 JENKINS_TASKS = ()
 
 PROJECT_APPS = ['blogengine']
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'

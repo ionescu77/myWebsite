@@ -29,10 +29,12 @@ ALLOWED_HOSTS = ['ionescu77.com']
 INSTALLED_APPS += (
     'landing',
     'blogengine',
+    'accounts',
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django.contrib.syndication',
     'django.contrib.sitemaps',
+    'crispy_forms',
 )
 
 SITE_ID = 1
@@ -42,3 +44,5 @@ SITE_ID = 1
 
 STATIC_ROOT = '/home/ionescu77/webapps/apollo13/ionescu77/static/'
 MEDIA_ROOT = '/home/ionescu77/webapps/apollo13/ionescu77/media/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
