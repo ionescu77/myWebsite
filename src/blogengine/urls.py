@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 urlpatterns = [
 
+    # Blog Create Post Form
     url(r'^create/$',
         login_required(PostCreateView.as_view()),
         name = 'create_post'    # added login_required but need settings.LOGIN_URL for user friendlines

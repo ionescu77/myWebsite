@@ -1,4 +1,5 @@
 {% extends "includes/base.html" %}
+{% load crispy_forms_tags %}
 
     {% load custom_markdown %}
     {% block title %} Create Post Form {% endblock %}
@@ -13,7 +14,7 @@
         <div class="form-group">
         <p>
           <form action="" method="post">{% csrf_token %}
-              {{ form.as_p }}
+              {{ form | crispy }}
               <input type="submit" value="Save" />
           </form>
         </p>
