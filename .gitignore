@@ -11,3 +11,4 @@ pip-selfcheck.json
 reports/
 htmlcov/
 .coverage
+migrations/
