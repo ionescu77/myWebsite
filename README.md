@@ -17,11 +17,12 @@ Run tests locally with jenkins (django style does not work anymore)
 ```
 python src/manage.py jenkins blogengine
 ```
-20170311
+2017.03.11
 
 Workflow (using git hooks & shell scripts for deployment):
-- dev -> local virtualenv (python 2.7.9 & runserver)
-- test -> ionescu77.avproiect.com (python 2.7.9 & mod_passenger)
+- local -> local virtualenv (python 2.7.9 & runserver)
+- dev -> ionescu77.avproiect.com (python 2.7.9 & mod_passenger)
+- test -> ionescu77.staging.avproiect.com (python 2.7.9 & mod_wsgi)
 - live -> ionescu77.com (python 2.7.9 & & mod_wsgi)
 
 2016.03.08
