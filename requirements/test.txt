@@ -3,7 +3,7 @@ markdown2==2.3.6
 Pygments==2.0.2
 psycopg2==2.7.6
 
-django-jenkins==0.18.1
+django-jenkins==0.110.0
 
 coverage==4.3.4
 coveralls==1.1
