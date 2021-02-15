@@ -1,6 +1,6 @@
 Django==1.8.19
 markdown2==2.3.6
-Pygments==2.0.2
+Pygments==2.8.0
 
 django-jenkins==0.18.1
 coverage==4.3.4
