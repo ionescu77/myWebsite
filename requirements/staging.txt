@@ -11,5 +11,5 @@ factory_boy==2.8.1
 
 django-crispy-forms==1.6.1
 
-django-axes==2.3.2
+django-axes==5.13.1
 pytz==2016.10
